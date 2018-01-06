@@ -31,8 +31,7 @@ public class UserController {
 	private DepartmentService departmentService; 
 	@Autowired
 	private ResumeService resumeService;
-	@Autowired
-	private PositionService positionService;
+
 
 	@RequestMapping("loginPage")
 	public String goLoginPage() {
@@ -70,15 +69,24 @@ public class UserController {
 		if (user != null) {
 			session.setAttribute("user", user);
 			List<Department> departments = departmentService.findAllDepartments();
-			model.addAttribute("departments", departments);
-			Resume resume = resumeService.getResumeByUid(user.getUid());
-			model.addAttribute("resume", resume);
-			if(resume!=null) {
-				Position position = resume.getPosition();
-				model.addAttribute("position", position);
+//			model.addAttribute("departments", departments);
+			session.setAttribute("departments", departments);
+			if(user.getType()==1) {
+				//游客
+				Resume resume = resumeService.getResumeByUid(user.getUid());
+				model.addAttribute("resume", resume);
+				if(resume!=null) {
+					Position position = resume.getPosition();
+					model.addAttribute("position", position);
+				}
+				return "tourist";
 			}
-			return "tourist";
+			if(user.getType()==0) {
+				//管理员
+				return "manager";
+			}
 		}
+		//走到这儿说明帐户或者密码错误
 		model.addAttribute("error", "error");
 		return "forward:../login.jsp";
 	}
@@ -108,6 +116,7 @@ public class UserController {
 	public String checkPassword(String oldPassword,HttpSession session) {
 		String password = MyUtil.md5(oldPassword);
 		User user = (User) session.getAttribute("user");
+		System.out.println(user.getPassword().equals(password));
 		if(user.getPassword().equals(password)) {
 			return "success";
 		}

@@ -30,11 +30,12 @@
 		})
 		$("input[name='oldPassword']").blur(function(){
 			var oldPassword = $(this).val();
+			alert(oldPassword);
 			$.ajax({
 				url:"${pageContext.request.contextPath }/user/checkPassword",
 				type:"post",
 				data:{oldPassword:oldPassword},
-				datatype:"text",
+				dataType:"text",
 				success:function(data){
 					if(data=="success"){
 						$(".span2").html("");
@@ -42,6 +43,7 @@
 						$(".span2").html("密码错误");
 					}
 				}
+				
 			})
 		})
 		$("input[name='checkPassword']").blur(function(){
@@ -59,7 +61,7 @@
 				url:"${pageContext.request.contextPath }/user/updatePassword",
 				type:"post",
 				data:{newPassword:newPassword},
-				datatype:"text",
+				dataType:"text",
 				success:function(data){
 					if(data=="ok"){
 						alert("修改成功");
@@ -108,7 +110,7 @@
 				</tr>
 				<tr>
 					<td>真实姓名</td>
-					<td><input type="text" name="realName" value="${requestScope.resume.realName }" placeholder="请输入您的真实姓名"></td>
+					<td><input type="text" name="realName" value="${requestScope.resume.realName }" placeholder="请输入您的真实姓名" required="required"></td>
 					<td>性别</td>
 					<td>
 					<c:if test="${requestScope.resume.sex eq '男'}">
@@ -150,7 +152,7 @@
 					<td>
 						<select name="deptId">
 							<option>部门</option>
-							<c:forEach items="${requestScope.departments }" var="department">
+							<c:forEach items="${sessionScope.departments }" var="department">
 								<option value="${department.did }" <c:if test="${department.did==requestScope.resume.position.department.did }">selected</c:if>>${department.deptName }</option>
 							</c:forEach>
 						</select>
@@ -194,11 +196,11 @@
 		<div align="center" class="flag" id="update">
 			<h2>修改密码</h2>
 			<form action="#" method="post">
-				原&nbsp;密&nbsp;码:<input type="password" name="oldPassword"><br/><br/>
-				<span class="span2" style="color:rgb(80,80,80)"></span><br/>
+				原&nbsp;密&nbsp;码:<input type="password" name="oldPassword">
+				<span class="span2" style="color:rgb(80,80,80)"></span><br/><br/>
 				新&nbsp;密&nbsp;码:<input type="password" name="newPassword"><br/><br/>
-				确认密码:<input type="password" name="checkPassword"><br/><br/>
-				<span class="span1" style="color:rgb(80,80,80)"></span><br/>
+				确认密码:<input type="password" name="checkPassword">
+				<span class="span1" style="color:rgb(80,80,80)"></span><br/><br/>
 				<input type="submit" value="修改" name="update">
 			</form>
 		</div>

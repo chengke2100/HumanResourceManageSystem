@@ -48,5 +48,10 @@ public class TestDepartmentDao {
 		System.out.println(department);
 	}
 	
+	@Test
+	public void queryPositionById() {
+		Position position = positionDao.queryPositionById(1);
+		System.out.println(position);
+	}
 
 }

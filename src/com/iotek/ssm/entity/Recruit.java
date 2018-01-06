@@ -4,7 +4,7 @@ public class Recruit {
 	private int recruitsId;
 	private String companyName;
 	private Position position;
-	private String jobInformation;//职位要求
+	private String jobInformation;//职位描述
 	private String requirements;//岗位要求
 	private String salary;//薪资范围
 	private int status;//是否有效

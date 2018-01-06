@@ -20,6 +20,11 @@
 			<association property="department" javaType="Department">
 				<id property="did" column="d_id"/>
 				<result property="deptName" column="dept_name"/>
+				<collection property="positions" ofType="Position">
+					<id property="pid" column="p_id"></id>
+					<result property="name" column="position_name"/>
+					<result property="createTime" column="create_time"/>
+				</collection>
 			</association>
 	</resultMap>
 </mapper>

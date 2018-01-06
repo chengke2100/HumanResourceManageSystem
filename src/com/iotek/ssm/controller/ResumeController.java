@@ -38,14 +38,13 @@ public class ResumeController {
 		resume.setPosition(position);
 		User user = (User) session.getAttribute("user");
 		resume.setUid(user.getUid());
-		System.out.println(resume);
 		if (resumeId == null) {
 			resumeService.addResume(resume);
 		} else {
 			resume.setRid(resumeId);
 			resumeService.updateResume(resume);
 		}
-		model.addAttribute("resume", resume);
+//		model.addAttribute("resume", resume);
 		return "tourist";
 	}
 }

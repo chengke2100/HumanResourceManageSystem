@@ -22,13 +22,13 @@ div#right {
 	padding-right: 25px;
 	left: -5px;
 	position: relative;
-	padding-top: 0;
- 	background: #619ec2; 
+	padding-top: -10px;
+/* 	background: #619ec2; */
 	margin: 5% 5% 0 0;
 }
 
 ul#navigation {
-	margin-left: -40px; margin-top : 25px;
+	margin-left: -40px; 
 	margin-right: -5px;
 	position: relative;
 	width: 220px;
@@ -56,7 +56,7 @@ ul#navigation li a:link, ul#navigation li a:visited {
 	-webkit-transition: all 200ms;
 	-moz-transition: all 200ms;
 	-o-transition: all 200ms;
-	padding: 30px 10px 5px 0
+	padding: 10px 10px 5px 0
 }
 
 ul#navigation li a:hover, ul#navigation li a.active {
