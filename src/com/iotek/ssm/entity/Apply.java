@@ -8,7 +8,7 @@ public class Apply {
 	private int userId;
 	private Date deliverTime;//投递时间
 	private Boolean isRead;//是否已查看
-	private String status;//面试状态
+	private String status;//招聘是否有效
 	public Apply() {
 		super();
 	}

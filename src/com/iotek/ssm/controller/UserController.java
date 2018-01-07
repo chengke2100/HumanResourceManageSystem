@@ -17,7 +17,6 @@ import com.iotek.ssm.entity.Position;
 import com.iotek.ssm.entity.Resume;
 import com.iotek.ssm.entity.User;
 import com.iotek.ssm.service.DepartmentService;
-import com.iotek.ssm.service.PositionService;
 import com.iotek.ssm.service.ResumeService;
 import com.iotek.ssm.service.UserService;
 import com.iotek.ssm.util.MyUtil;
@@ -74,11 +73,16 @@ public class UserController {
 			if(user.getType()==1) {
 				//сн©м
 				Resume resume = resumeService.getResumeByUid(user.getUid());
-				model.addAttribute("resume", resume);
 				if(resume!=null) {
-					Position position = resume.getPosition();
-					model.addAttribute("position", position);
+					int did = resume.getPosition().getDepartment().getDid();
+					Department department = departmentService.getDepartmentById(did);
+					resume.getPosition().setDepartment(department);
 				}
+				model.addAttribute("resume", resume);
+//				if(resume!=null) {
+//					Position position = resume.getPosition();
+//					model.addAttribute("position", position);
+//				}
 				return "tourist";
 			}
 			if(user.getType()==0) {
@@ -122,6 +126,15 @@ public class UserController {
 		}
 		return "fail";
 		
+	}
+	
+	@ResponseBody
+	@RequestMapping("findResume")
+	public String findResume(HttpSession session,Model model) {
+		User user = (User) session.getAttribute("user");
+		Resume resume = resumeService.getResumeByUid(user.getUid());
+		model.addAttribute("resume", resume);
+		return "on";
 	}
 
 }

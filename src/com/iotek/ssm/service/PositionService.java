@@ -1,5 +1,7 @@
 package com.iotek.ssm.service;
 
+import java.util.List;
+
 import com.iotek.ssm.entity.Position;
 
 public interface PositionService {
@@ -15,4 +17,9 @@ public interface PositionService {
 	 * @return
 	 */
 	Position getPositionById(int pid);
+	/**
+	 * 查询所有职位
+	 * @return
+	 */
+	List<Position> findAllPositions();
 }

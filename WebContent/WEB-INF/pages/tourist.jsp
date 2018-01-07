@@ -12,6 +12,13 @@
 <script type="text/javascript">
 	$(function(){
 		$(".flag").hide();
+		if(${!empty requestScope.recruits}){
+			$("#queryRecruits").show();
+		}
+		if(${empty requestScope.resume}){
+			$("select[name='pid']").append("<option>职位</option>");
+		}
+		
 		$("select[name='deptId']").change(function(){
 			var did = $(this).val();
 			$.ajax({
@@ -71,11 +78,46 @@
 			})
 			return false;
 		})
+		$("input[name='apply']").click(function(){
+			var recruitsId = $(this).prev().val();
+			alert(recruitsId);
+			$.ajax({
+				url:"${pageContext.request.contextPath}/recruit/apply",
+				data:{recruitsId:recruitsId},
+				dataType:"text",
+				success:function(data){
+					if(data=="1"){
+						alert("您还没有创建简历，请先去创建简历");
+					}else if(data=="2"){
+						alert("您简历上的应聘职位与招聘上的职位不相同 ，请先修改简历或者改投其它职位");
+					}else if(data=="3"){
+						alert("您还有未完结的应聘，请等待上个应聘完结之后在投递");
+					}else{
+						alert("申请成功,请注意关注企业反馈信息");
+					}
+				}
+			})
+		})
 	})
 	
 	function queryResume(){
 		$(".flag").hide();
 		$("#resume").show();
+		if(${empty requestScope.resume}){
+			$.ajax({
+				url:"${pageContext.request.contextPath}/user/findResume",
+				data:{},
+				type:"post",
+				dataType:"text",
+				success:function(data){
+					if(data=="on"){
+	//					 window.location.reload();
+						 alert(aaa);
+						 $("#resume").show();
+					}
+				}
+			})
+		}
 	}
 	function goBack(){
 		$(".flag").hide();
@@ -84,10 +126,14 @@
 		$(".flag").hide();
 		$("#update").show();
 	}
+	
 	function quit(){
-		if(!confirm("是否确认退出？")){
+		if(confirm("是否确认退出？")){
+			return true;	
+		}else{
 			return false;
-		}		
+		}
+		return false;
 	}
 </script>
 </head>
@@ -97,8 +143,8 @@
 			<li><a href="#">反馈</a></li>
 			<li><a href="#" onclick="queryResume()">查看简历</a></li>
 			<li><a href="#" onclick="updatePassword()">修改密码</a></li>
-			<li><a href="#">其它</a></li>
-			<li><a href="${pageContext.request.contextPath }/user/loginPage" onclick="quit()">退出</a></li>
+			<li><a href="${pageContext.request.contextPath }/recruit/showAll" onclick="queryRecuit()">查看招聘信息</a></li>
+			<li><a href="${pageContext.request.contextPath }/user/loginPage" onclick="return quit()">退出</a></li>
 		</ul>
 	</div>
 	<div id="right" >
@@ -157,7 +203,9 @@
 							</c:forEach>
 						</select>
 						<select name="pid">
-							<option value="${requestScope.position.pid }">${requestScope.position.name }</option>
+							<c:forEach items="${requestScope.resume.position.department.positions }" var="position">
+								<option value="${position.pid }" <c:if test="${requestScope.resume.position.pid==position.pid }">selected</c:if> >${position.name }</option>
+							</c:forEach>
 						</select>
 					</td>
 					<td>政治面貌</td>
@@ -203,6 +251,41 @@
 				<span class="span1" style="color:rgb(80,80,80)"></span><br/><br/>
 				<input type="submit" value="修改" name="update">
 			</form>
+		</div>
+		<div align="center" class="flag" id="queryRecruits">
+			<c:forEach items="${requestScope.recruits }" var="recruit">
+				<form action="#" method="post">
+					
+					<table border="2" cellpadding="10" cellspacing="0">
+						<tr>
+							<td>公司名称</td>
+							<td>${recruit.companyName }</td>
+						</tr>
+						<tr>
+							<td>招聘职位</td>
+							<td>${recruit.position.department.deptName }&nbsp;&nbsp;${recruit.position.name }</td>
+						</tr>
+						<tr>
+							<td>职位描述</td>
+							<td>${recruit.jobInformation }</td>
+						</tr>
+						<tr>
+							<td>岗位要求</td>
+							<td>${recruit.requirements }</td>
+						</tr>
+						<tr>
+							<td>薪资范围</td>
+							<td>${recruit.salary }</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<input type="hidden" name="recruitsId" value="${recruit.recruitsId }">
+								<input type="submit" value="申请职位" name="apply">
+							</td>
+						</tr>
+					</table>
+				</form>
+			</c:forEach>
 		</div>
 	</div>
 </body>

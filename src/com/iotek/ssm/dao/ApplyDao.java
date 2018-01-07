@@ -2,6 +2,8 @@ package com.iotek.ssm.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.iotek.ssm.entity.Apply;
 
 public interface ApplyDao {
@@ -17,10 +19,19 @@ public interface ApplyDao {
 	 * @return
 	 */
 	int deleteApply(int applyId);
+
+	List<Apply> queryApplysByStatus(String status);
+	
+	List<Apply> queryApplyByUidAndStatus(@Param(value="uid")int uid,@Param(value="status")String status);
+	
+	Apply queryApplyById(Integer applyId);
 	/**
-	 * 查询所有应聘信息
-	 * 此方法暂未实现查出apply里的recruit
+	 * 修改应聘信息
+	 * @param apply
 	 * @return
 	 */
-	List<Apply> queryAllApplys();
+	int updateApply(Apply apply);
+	
+	
+
 }

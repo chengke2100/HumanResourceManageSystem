@@ -38,7 +38,7 @@
 		from 
 			resumes r,positions p,departments d 
 		where 
-			r.position_id=p.p_id and p.dept_id=d.d_id and u_id=#{uid}
+			r.position_id=p.p_id and p.dept_id=d.d_id and r.u_id=#{uid}
 	</select>
 	<resultMap type="Resume" id="ResumeResult">
 		<id property="rid" column="r_id"/>

@@ -34,7 +34,7 @@ public class TestApplyDao {
 	}
 	@Test
 	public void testupdate() {
-		List<Apply> applys = applyDao.queryAllApplys();
-		System.out.println(applys);
+		Apply apply = applyDao.queryApplyById(3);
+		System.out.println(apply);
 	}
 }

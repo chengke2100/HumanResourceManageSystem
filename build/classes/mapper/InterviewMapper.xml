@@ -12,7 +12,7 @@
 	
 	
 	<select id="queryInterviewByUid" resultMap="InterviewResult">
-		select * from apply a,interviews i where a.apply_id=i.apply_id
+		select * from apply a,interviews i where a.apply_id=i.apply_id and a.user_id=#{userId}
 	</select>
 	
 	<resultMap type="Interview" id="InterviewResult">

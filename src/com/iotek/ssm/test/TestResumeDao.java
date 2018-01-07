@@ -23,7 +23,7 @@ public class TestResumeDao {
 	}
 	@Test
 	public void testqueryResumeById() {
-		Resume resume = resumeDao.queryResumeById(1);
+		Resume resume = resumeDao.queryResumeByUid(11);
 		System.out.println(resume);
 	}
 	@Test

@@ -13,8 +13,25 @@
 		delete from apply where apply_id=#{applyId}
 	</delete>
 	
-	<select id="queryAllApplys" resultMap="ApplyResult">
-		select * from apply a,recruits r where a.recruit_id=r.recruits_id
+	<update id="updateApply" parameterType="Apply">
+		update 
+			apply 
+		set 
+			recruit_id=#{recruit.recruitsId},user_id=#{userId},delive_time=#{deliverTime},is_read=#{isRead},status=#{status}
+		where 
+			apply_id=#{applyId}
+	</update>
+	
+	<select id="queryApplysByStatus" resultMap="ApplyResult">
+		select * from apply a,recruits r where a.recruit_id=r.recruits_id and a.status=#{status}
+	</select>
+	
+	<select id="queryApplyByUidAndStatus" resultMap="ApplyResult">
+		select * from apply a,recruits r where a.recruit_id=r.recruits_id and a.user_id=#{uid} and a.status=#{status}
+	</select>
+	
+	<select id="queryApplyById" resultMap="ApplyResult">
+		select * from apply a,recruits r where a.recruit_id=r.recruits_id and a.apply_id=#{applyId}
 	</select>
 	
 	<resultMap type="Apply" id="ApplyResult">

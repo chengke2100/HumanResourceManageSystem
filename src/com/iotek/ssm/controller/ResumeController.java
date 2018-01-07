@@ -1,17 +1,20 @@
 package com.iotek.ssm.controller;
 
+
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.fastjson.JSON;
+import com.iotek.ssm.entity.Apply;
 import com.iotek.ssm.entity.Position;
 import com.iotek.ssm.entity.Resume;
 import com.iotek.ssm.entity.User;
+import com.iotek.ssm.service.ApplyService;
 import com.iotek.ssm.service.PositionService;
 import com.iotek.ssm.service.ResumeService;
 
@@ -22,6 +25,8 @@ public class ResumeController {
 	private ResumeService resumeService;
 	@Autowired
 	private PositionService positionService;
+	@Autowired
+	private ApplyService applyService;
 
 //	@ResponseBody
 //	@RequestMapping(value="query",produces = "application/json; charset=utf-8")
@@ -46,5 +51,17 @@ public class ResumeController {
 		}
 //		model.addAttribute("resume", resume);
 		return "tourist";
+	}
+	
+	@RequestMapping("showResume/{applyId}")
+	public String showResume(@PathVariable("applyId")Integer applyId,Model model) {
+		Apply apply = applyService.getApplyById(applyId); 
+		apply.setIsRead(true);
+		applyService.updateApply(apply);
+		Resume resume = resumeService.getResumeByUid(apply.getUserId());
+		model.addAttribute("resume", resume);
+		//为了在生成InterView对象的时候有apply，所以还要把applyId传回去
+		model.addAttribute("applyId", applyId);
+		return "manager";
 	}
 }

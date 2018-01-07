@@ -1,5 +1,7 @@
 package com.iotek.ssm.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,11 @@ public class PositionServiceImpl implements PositionService {
 	@Override
 	public Position getPositionById(int pid) {
 		return positionDao.queryPositionById(pid);
+	}
+
+	@Override
+	public List<Position> findAllPositions() {
+		return positionDao.queryAllPositions();
 	}
 
 }

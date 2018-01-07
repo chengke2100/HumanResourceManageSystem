@@ -13,6 +13,10 @@
 		select * from positions p,departments d where p.dept_id=d.d_id and p.p_id=#{pid}
 	</select>
 	
+	<select id="queryAllPositions" resultMap="PositionResult">
+		select * from positions p,departments d where p.dept_id=d.d_id
+	</select>
+	
 	<resultMap type="Position" id="PositionResult">
 		<id property="pid" column="p_id"/>
 			<result property="name" column="position_name"/>
