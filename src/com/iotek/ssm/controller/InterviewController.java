@@ -1,11 +1,16 @@
 package com.iotek.ssm.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.iotek.ssm.entity.Apply;
 import com.iotek.ssm.entity.Interview;
@@ -21,7 +26,7 @@ public class InterviewController {
 	private ApplyService applyService;
 	
 	@RequestMapping("addInterview")
-	public String addInterview(Integer applyId,Date interviewTime, Model model) {
+	public String addInterview(Integer applyId,@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd")Date interviewTime, Model model) {
 		Apply apply = applyService.getApplyById(applyId);
 		Interview interview = new Interview(-1, apply, "按时面试", interviewTime, "未录用");
 		interviewService.addInterview(interview);

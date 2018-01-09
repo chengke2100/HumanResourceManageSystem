@@ -83,18 +83,60 @@
 	}
 	function goback(){
 		$("#resume").hide();
-		$.ajax({
-			url:"${pageContext.request.contextPath }/recruit/showApplys",
-			data:{},
-			type:"post",
-			dataType:"text",
-			success:function(data){
-				//返回暂时没做好
-			}
-		})
+		window.location.href="${pageContext.request.contextPath }/recruit/showApplys";
 		$("#apply").show();
 		
 	}
+	function showDepartment(){
+		$(".flag").hide();
+		$("#department").show();
+	}
+	function updateDepartment(did){
+		alert(this);
+		//这里有问题
+		var $td = $(this).parent().parent().children().first();
+		alert($td);
+		$td.empty();
+		$td.append("<input type='text' name='deptName' ><input type='button' value='确定' onclick='updateDepartmentName("+did+")'>");
+	}
+	
+	function updateDepartmentName(did){
+		var $td = $("input[name='deptName']").parent();
+		var deptName=$("input[name='deptName']").val();
+		$.ajax({
+			url:"${pageContext.request.contextPath}/department/updateDepartment",
+			type:"post",
+			data:{did:did,deptName:deptName},
+			dataType:"json",
+			success:function(data){
+				$td.empty();
+				$td.append("<a href='#' onclick='showPositions("+data.did+")'>"+data.deptName+"</a>");
+			}
+		})
+	}
+	
+	function showPositions(did){
+		$.ajax({
+			url:"${pageContext.request.contextPath}/user/positions",
+			data:{did:did},
+			type:"post",
+			dataType:"json",
+			success:function(data){
+				$(".position").empty();
+				$(".position").append("<h2>职位</h2>");
+				$(".position").append("<table class='positions'></table>")
+				$.each(data,function(idx,item){
+					$(".positions").append("<tr>"+
+					"<td><a>"+item.name+"</a></td>"+
+					"<td><a>修改</a></td>"+
+					"<td><a>删除</a></td>"+
+					"</tr>");
+				})
+				$(".position").append("<a>添加职位</a>");
+			}
+		})
+	}
+	
 	function quit(){
 		if(confirm("是否确认退出？")){
 			return true;	
@@ -112,7 +154,7 @@
 			<li><a href="#" onclick="postJob()">发布招聘信息</a></li>
 			<li><a href="${pageContext.request.contextPath }/recruit/showAll" onclick="showJobs()">管理招聘信息</a></li>
 			<li><a href="${pageContext.request.contextPath }/recruit/showApplys">应聘管理</a></li>
-			<li><a href="#">部门职位</a></li>
+			<li><a href="#" onclick="showDepartment()">部门职位</a></li>
 			<li><a href="#">培训管理</a></li>
 			<li><a href="#">员工管理</a></li>
 			<li><a href="#">奖罚管理</a></li>
@@ -244,7 +286,6 @@
 						<td>${apply.userId }</td>
 						<td>${apply.deliverTime }</td>
 						<td>
-						<c:if test="${apply.isRead }">已查看</c:if>
 						<c:choose>
 							<c:when test="${apply.isRead }">已查看</c:when>
 							<c:otherwise>未查看</c:otherwise>
@@ -306,6 +347,24 @@
 					<input type="submit" value="确认">
 				</div>
 			</form>		
+		</div>
+		<div class="flag" id="department" align="center">
+			<div style="float:left" class="dept">
+				<h2>部门</h2>
+				<table>
+					<c:forEach items="${sessionScope.departments }" var="department">
+						<tr>
+							<td ><a href="#" onclick="showPositions(${department.did})">${department.deptName }</a></td>
+							<td><a href="#" onclick="updateDepartment(${department.did})">修改</a></td>
+							<td><a>删除</a></td>
+						</tr>
+					</c:forEach>
+				</table>
+				<a>添加部门</a>
+			</div>
+			<div style="float:left" class="position">
+		
+			</div>
 		</div>
 	</div>
 </body>

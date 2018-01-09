@@ -22,4 +22,10 @@ public interface DepartmentService {
 	 * @return
 	 */
 	int deleteDepartment(int did);
+	/**
+	 * 修改部门信息
+	 * @param department
+	 * @return
+	 */
+	int updateDepartment(Department department);
 }

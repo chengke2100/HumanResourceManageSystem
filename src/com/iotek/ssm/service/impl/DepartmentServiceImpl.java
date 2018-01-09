@@ -30,4 +30,9 @@ public class DepartmentServiceImpl implements DepartmentService {
 		return 0;
 	}
 
+	@Override
+	public int updateDepartment(Department department) {
+		return departmentDao.updateDepartment(department);
+	}
+
 }
