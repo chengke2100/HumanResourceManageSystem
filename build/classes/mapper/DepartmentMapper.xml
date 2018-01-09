@@ -18,8 +18,13 @@
 	</update>
 	
 	<select id="queryDepartmentById" resultMap="DepartmentResult">
-		select * from departments d,positions p where   d.d_id=p.dept_id and d.d_id=#{did}
+		select * from departments d left join positions p on  d.d_id=p.dept_id where d.d_id=#{did}
 	</select>
+	
+	<select id="checkDeptName" resultType="Integer">
+		select d_id from departments where dept_name=#{deptName}
+	</select>
+	
 	<resultMap type="Department" id="DepartmentResult">
 		<id property="did" column="d_id"/>
 		<result property="deptName" column="dept_name"/>
@@ -27,12 +32,17 @@
 		<collection property="positions" ofType="Position">
 			<id property="pid" column="p_id"></id>
 			<result property="name" column="position_name"/>
-			<result property="createTime" column="create_time"/>
 		</collection>
 	</resultMap>
-	
+	<select id="queryDepartmentByDeptName" parameterType="String"  resultMap="DepartmentResult">
+		select * from departments d left join positions p on d.d_id=p.dept_id where d.dept_name=#{deptName}
+	</select>
 	
 	<select id="queryAllDepartments" resultMap="DepartmentResult">
-		select * from users u,departments d,positions p where u.dept_id=d.d_id and u.position_id=p.p_id 
+		select * from departments d left join positions p on  d.d_id=p.dept_id 
 	</select>
+	
+	<delete id="deleteDepartment">
+		delete from departments where d_id=#{did}
+	</delete>
 </mapper>

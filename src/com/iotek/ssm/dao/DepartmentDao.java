@@ -34,4 +34,8 @@ public interface DepartmentDao {
 	 * @return
 	 */
 	Department queryDepartmentById(int did);
+	
+	Integer checkDeptName(String deptName);
+	
+	Department queryDepartmentByDeptName(String deptName);
 }

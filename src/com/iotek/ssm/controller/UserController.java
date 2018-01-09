@@ -101,8 +101,13 @@ public class UserController {
 	public String getPositions(Integer did) {
 		Department department = departmentService.getDepartmentById(did);
 		Set<Position> src = department.getPositions();
-		String positions = JSON.toJSONString(src);
-		return positions;		
+		String data = null;
+		if(src.isEmpty()) {
+			data = JSON.toJSONString(null);
+		}else {
+			data = JSON.toJSONString(src);
+		}
+		return data;		
 	}
 	
 	@ResponseBody

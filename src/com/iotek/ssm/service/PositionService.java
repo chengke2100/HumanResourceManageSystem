@@ -22,4 +22,11 @@ public interface PositionService {
 	 * @return
 	 */
 	List<Position> findAllPositions();
+	/**
+	 * 根据职位名查找指定部门下的职位
+	 * @param pName
+	 * @param did 
+	 * @return
+	 */
+	Position getPositionByName(String pName, Integer did);
 }

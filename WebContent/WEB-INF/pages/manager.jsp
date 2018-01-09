@@ -92,15 +92,31 @@
 		$("#department").show();
 	}
 	function updateDepartment(did){
-		alert(this);
-		//这里有问题
-		var $td = $(this).parent().parent().children().first();
-		alert($td);
-		$td.empty();
-		$td.append("<input type='text' name='deptName' ><input type='button' value='确定' onclick='updateDepartmentName("+did+")'>");
+		var deptName = prompt("请输入您要修改的部门名");
+		if(deptName==null){
+			return;
+		}
+		var $td = $("#"+did);
+		$.ajax({
+			url:"${pageContext.request.contextPath}/department/updateDepartment",
+			type:"post",
+			data:{did:did,deptName:deptName},
+			dataType:"json",
+			success:function(data){
+				if(data==null){
+					alert("名字为"+deptName+"的部门已经存在,请查证后在修改");
+				}else{
+					$td.empty();
+					$td.append("<a href='#' onclick='showPositions("+data.did+")'>"+data.deptName+"</a>")
+				}
+			},
+			error:function(x,msg,obj){
+				alert(msg);
+			}
+		})
 	}
 	
-	function updateDepartmentName(did){
+/* 	function updateDepartmentName(did){
 		var $td = $("input[name='deptName']").parent();
 		var deptName=$("input[name='deptName']").val();
 		$.ajax({
@@ -113,7 +129,7 @@
 				$td.append("<a href='#' onclick='showPositions("+data.did+")'>"+data.deptName+"</a>");
 			}
 		})
-	}
+	} */
 	
 	function showPositions(did){
 		$.ajax({
@@ -124,15 +140,100 @@
 			success:function(data){
 				$(".position").empty();
 				$(".position").append("<h2>职位</h2>");
-				$(".position").append("<table class='positions'></table>")
-				$.each(data,function(idx,item){
+				$(".position").append("<table class='positions'></table>");
+				if(data!=null){							
+					$.each(data,function(idx,item){
+						$(".positions").append("<tr>"+
+						"<td><a>"+item.name+"</a></td>"+
+						"<td><a>修改</a></td>"+
+						"<td><a>删除</a></td>"+
+						"</tr>");
+					})
+					$(".position").append("<a href='javascript:addPosition("+did+")'>添加职位</a>");
+				}else{
+					$(".position").append("<a href='javascript:addPosition("+did+")'>添加职位</a>");
+				}		
+			}
+		})
+	}
+	
+	function addPosition(did){
+		var pName =  prompt("请输入您要添加的职位名");
+		if(pName==null){
+			return;
+		}
+		$.ajax({
+			url:"${pageContext.request.contextPath}/department/addPosition",
+			type:"post",
+			data:{pName:pName,did:did},
+			dataType:"json",
+			success:function(data){
+				if(data==null){
+					alert("名字为"+pName+"的职位已经存在,添加失败")
+				}else{
+					alert("添加成功");
 					$(".positions").append("<tr>"+
-					"<td><a>"+item.name+"</a></td>"+
-					"<td><a>修改</a></td>"+
-					"<td><a>删除</a></td>"+
-					"</tr>");
-				})
-				$(".position").append("<a>添加职位</a>");
+							"<td><a>"+data.name+"</a></td>"+
+							"<td><a>修改</a></td>"+
+							"<td><a>删除</a></td>"+
+							"</tr>");
+				}
+			},
+			error:function(x,msg,obj){
+				alert(msg);
+			}
+		})
+	}
+	
+	function deleteDepartment(did){
+		var deptName = $("#"+did).text();
+		if(!confirm("是否确定删除部门名为"+deptName+"的部门")){
+			return;
+		}
+		var $td = $("#"+did).parent();
+		$.ajax({
+			url:"${pageContext.request.contextPath}/department/deleteDepartment",
+			type:"post",
+			data:{did:did},
+			dataType:"text",
+			success:function(data){
+				if(data=="0"){
+					alert("该部门下面有在职员工，删除失败");
+				}else{
+					alert("删除成功");
+					$td.empty();
+				}
+			},
+			error:function(x,msg,obj){
+				alert(msg);
+			}
+		})
+	}
+	
+	function addDepartment(){
+		var deptName = prompt("请输入您要添加的部门名");
+		if(deptName==null){
+			return;
+		}
+		$.ajax({
+			url:"${pageContext.request.contextPath}/department/addDepartment",
+			type:"post",
+			data:{deptName:deptName},
+			dataType:"json",
+			success:function(data){
+				if(data==null){
+					alert("名字为"+deptName+"的部门已经存在,添加失败")
+				}else{
+					alert("添加成功");
+					$("#departments").append("<tr>"+
+							"<td id="+data.did+"><a href='#' onclick='showPositions("+data.did+")'>"+deptName+"</a></td>"+
+							"<td><a href='javascript:updateDepartment("+data.did+")'>修改</a></td>"+
+							"<td><a href='javascript:deleteDepartment("+data.did+")'>删除</a></td>"+
+							"</tr>");
+				}
+			},
+			error:function(x,msg,obj){
+				alert(msg);
 			}
 		})
 	}
@@ -351,19 +452,19 @@
 		<div class="flag" id="department" align="center">
 			<div style="float:left" class="dept">
 				<h2>部门</h2>
-				<table>
+				<table id="departments">
 					<c:forEach items="${sessionScope.departments }" var="department">
 						<tr>
-							<td ><a href="#" onclick="showPositions(${department.did})">${department.deptName }</a></td>
-							<td><a href="#" onclick="updateDepartment(${department.did})">修改</a></td>
-							<td><a>删除</a></td>
+							<td id="${department.did}"><a href="#" onclick="showPositions(${department.did})">${department.deptName }</a></td>
+							<td><a href="javascript:updateDepartment(${department.did})">修改</a></td>
+							<td><a href="javascript:deleteDepartment(${department.did})">删除</a></td>
 						</tr>
 					</c:forEach>
 				</table>
-				<a>添加部门</a>
+				<a href="javascript:addDepartment()">添加部门</a>
 			</div>
 			<div style="float:left" class="position">
-		
+				
 			</div>
 		</div>
 	</div>

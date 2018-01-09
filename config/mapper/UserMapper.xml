@@ -21,6 +21,8 @@
 	<select id="queryUserById" resultMap="UserResult">
 		select * from users u,departments d,positions p where u.dept_id=d.d_id and u.position_id=p.p_id and u.u_id=#{uid}
 	</select>
+
+	
 	<resultMap type="User" id="UserResult">
 		<id property="uid" column="u_id"/>
 		<result property="userName" column="user_name"/>
@@ -48,5 +50,9 @@
 	
 	<select id="queryUserName" parameterType="String" resultType="Integer">
 		select u_id from users where user_name=#{userName}
+	</select>
+	
+	<select id="queryUsersIdByDeptId" resultType="Integer">
+		select u_id from users u,departments d where u.dept_id=d.d_id and u.dept_id=#{did} and u.resignation_reason=#{resignationReason}
 	</select>
 </mapper>

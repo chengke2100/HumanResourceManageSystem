@@ -44,7 +44,7 @@ public class TestDepartmentDao {
 	
 	@Test
 	public void testqueryDepartmentById() {
-		Department department = departmentDao.queryDepartmentById(1);
+		Department department = departmentDao.queryDepartmentById(2);
 		System.out.println(department);
 	}
 	

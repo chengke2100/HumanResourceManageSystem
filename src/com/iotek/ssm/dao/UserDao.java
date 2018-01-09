@@ -50,5 +50,10 @@ public interface UserDao {
 	 * @return
 	 */
 	Integer queryUserName(String userName);
-	
+	/**
+	 * 根据部门id和离职原因来查询员工id
+	 * @param did
+	 * @return
+	 */
+	List<Integer> queryUsersIdByDeptId(@Param(value="did")Integer did,@Param(value="resignationReason")String resignationReason);
 }

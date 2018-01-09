@@ -2,6 +2,8 @@ package com.iotek.ssm.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.iotek.ssm.entity.Position;
 
 public interface PositionDao {
@@ -19,4 +21,6 @@ public interface PositionDao {
 	Position queryPositionById(int pid);
 	
 	List<Position> queryAllPositions();
+	
+	Position queryPositionByName(@Param(value="pName")String pName, @Param(value="did")Integer did);
 }

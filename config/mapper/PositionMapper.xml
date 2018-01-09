@@ -10,25 +10,37 @@
 	</insert>
 	
 	<select id="queryPositionById" resultMap="PositionResult">
-		select * from positions p,departments d where p.dept_id=d.d_id and p.p_id=#{pid}
+		select * from (positions p left join departments d on d.d_id=p.dept_id)left join users u on p.p_id=u.position_id where p.p_id=#{pid}
 	</select>
 	
 	<select id="queryAllPositions" resultMap="PositionResult">
-		select * from positions p,departments d where p.dept_id=d.d_id
+		select * from (positions p left join departments d on d.d_id=p.dept_id)left join users u on p.p_id=u.position_id
+	</select>
+	
+	<select id="queryPositionByName" resultMap="PositionResult">
+		select * from positions where position_name=#{pName} and dept_id=#{did}
 	</select>
 	
 	<resultMap type="Position" id="PositionResult">
 		<id property="pid" column="p_id"/>
-			<result property="name" column="position_name"/>
-			<result property="createTime" column="create_time"/>
-			<association property="department" javaType="Department">
-				<id property="did" column="d_id"/>
-				<result property="deptName" column="dept_name"/>
-				<collection property="positions" ofType="Position">
-					<id property="pid" column="p_id"></id>
-					<result property="name" column="position_name"/>
-					<result property="createTime" column="create_time"/>
-				</collection>
-			</association>
+		<result property="name" column="position_name"/>
+		<result property="createTime" column="create_time"/>
+		<association property="department" javaType="Department">
+			<id property="did" column="d_id"/>
+			<result property="deptName" column="dept_name"/>
+			<collection property="positions" ofType="Position">
+				<id property="pid" column="p_id"></id>
+				<result property="name" column="position_name"/>
+				<result property="createTime" column="create_time"/>
+			</collection>
+		</association>
+		<collection property="users" javaType="User">
+			<id property="uid" column="u_id"/>
+			<result property="userName" column="user_name"/>
+			<result property="password" column="password"/>
+			<result property="type" column="type"/>
+			<result property="entryDate" column="entry_date"/>
+			<result property="resignationReason" column="resignation_reason"/>
+		</collection>
 	</resultMap>
 </mapper>

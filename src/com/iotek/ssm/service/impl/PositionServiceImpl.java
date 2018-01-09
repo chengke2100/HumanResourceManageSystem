@@ -29,4 +29,9 @@ public class PositionServiceImpl implements PositionService {
 		return positionDao.queryAllPositions();
 	}
 
+	@Override
+	public Position getPositionByName(String pName, Integer did) {
+		return positionDao.queryPositionByName(pName,did);
+	}
+
 }
