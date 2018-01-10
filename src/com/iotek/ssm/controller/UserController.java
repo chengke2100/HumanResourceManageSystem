@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
 import com.iotek.ssm.entity.Department;
+import com.iotek.ssm.entity.Interview;
 import com.iotek.ssm.entity.Position;
 import com.iotek.ssm.entity.Resume;
 import com.iotek.ssm.entity.User;
 import com.iotek.ssm.service.DepartmentService;
+import com.iotek.ssm.service.InterviewService;
 import com.iotek.ssm.service.ResumeService;
 import com.iotek.ssm.service.UserService;
 import com.iotek.ssm.util.MyUtil;
@@ -30,7 +32,8 @@ public class UserController {
 	private DepartmentService departmentService; 
 	@Autowired
 	private ResumeService resumeService;
-
+	@Autowired
+	private InterviewService interviewService;
 
 	@RequestMapping("loginPage")
 	public String goLoginPage() {
@@ -79,6 +82,8 @@ public class UserController {
 					resume.getPosition().setDepartment(department);
 				}
 				model.addAttribute("resume", resume);
+				Interview interview = interviewService.getInterviewByUid(user.getUid());
+				model.addAttribute("interview", interview);
 //				if(resume!=null) {
 //					Position position = resume.getPosition();
 //					model.addAttribute("position", position);

@@ -19,4 +19,6 @@ public interface UserService {
 	 * @return
 	 */
 	List<Integer> findUsersIdByDid(Integer did, String resignationReason);
+
+	List<Integer> findUsersIdByPid(Integer pid,  String resignationReason);
 }

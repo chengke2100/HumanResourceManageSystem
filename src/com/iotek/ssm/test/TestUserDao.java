@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.iotek.ssm.dao.InterviewDao;
 import com.iotek.ssm.dao.UserDao;
+import com.iotek.ssm.entity.Interview;
 import com.iotek.ssm.entity.User;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -17,6 +19,8 @@ import com.iotek.ssm.entity.User;
 public class TestUserDao {
 	@Autowired
 	private UserDao userDao;
+	@Autowired
+	private InterviewDao interviewDao;
 	
 	@Test
 	public void testinsertUser() {
@@ -56,4 +60,13 @@ public class TestUserDao {
 		List<Integer> list = userDao.queryUsersIdByDeptId(1, null);
 		System.out.println(list);
 	}
+	
+	@Test
+	public void testqueryInterviewByUid() {
+		Interview interview = interviewDao.queryInterviewByUid(8);
+		interview.setIsInterview("∞¥ ±√Ê ‘");
+		int res = interviewDao.updateInterview(interview);
+		System.out.println(res);
+	}
+	
 }

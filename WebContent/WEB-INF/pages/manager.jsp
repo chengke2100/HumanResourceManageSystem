@@ -47,24 +47,6 @@
 				}
 			})
 		})
-		$("input[name='oldPassword']").blur(function(){
-			var oldPassword = $(this).val();
-			alert(oldPassword);
-			$.ajax({
-				url:"${pageContext.request.contextPath }/user/checkPassword",
-				type:"post",
-				data:{oldPassword:oldPassword},
-				dataType:"text",
-				success:function(data){
-					if(data=="success"){
-						$(".span2").html("");
-					}else{
-						$(".span2").html("密码错误");
-					}
-				}
-				
-			})
-		})
 		
 	})
 	
@@ -106,6 +88,7 @@
 				if(data==null){
 					alert("名字为"+deptName+"的部门已经存在,请查证后在修改");
 				}else{
+					alert("修改成功");
 					$td.empty();
 					$td.append("<a href='#' onclick='showPositions("+data.did+")'>"+data.deptName+"</a>")
 				}
@@ -116,20 +99,7 @@
 		})
 	}
 	
-/* 	function updateDepartmentName(did){
-		var $td = $("input[name='deptName']").parent();
-		var deptName=$("input[name='deptName']").val();
-		$.ajax({
-			url:"${pageContext.request.contextPath}/department/updateDepartment",
-			type:"post",
-			data:{did:did,deptName:deptName},
-			dataType:"json",
-			success:function(data){
-				$td.empty();
-				$td.append("<a href='#' onclick='showPositions("+data.did+")'>"+data.deptName+"</a>");
-			}
-		})
-	} */
+
 	
 	function showPositions(did){
 		$.ajax({
@@ -144,9 +114,9 @@
 				if(data!=null){							
 					$.each(data,function(idx,item){
 						$(".positions").append("<tr>"+
-						"<td><a>"+item.name+"</a></td>"+
-						"<td><a>修改</a></td>"+
-						"<td><a>删除</a></td>"+
+						"<td class="+item.pid+"><a>"+item.name+"</a></td>"+
+						"<td><a href='javascript:updatePosition("+item.pid+")'>修改</a></td>"+
+						"<td><a href='javascript:deletePosition("+item.pid+")'>删除</a></td>"+
 						"</tr>");
 					})
 					$(".position").append("<a href='javascript:addPosition("+did+")'>添加职位</a>");
@@ -173,10 +143,61 @@
 				}else{
 					alert("添加成功");
 					$(".positions").append("<tr>"+
-							"<td><a>"+data.name+"</a></td>"+
-							"<td><a>修改</a></td>"+
-							"<td><a>删除</a></td>"+
+							"<td class="+data.pid+"><a>"+data.name+"</a></td>"+
+							"<td><a href='javascript:updatePosition("+data.pid+")'>修改</a></td>"+
+							"<td><a href='javascript:deletePosition("+data.pid+")'>删除</a></td>"+
 							"</tr>");
+				}
+			},
+			error:function(x,msg,obj){
+				alert(msg);
+			}
+		})
+	}
+	
+	function updatePosition(pid){
+		var pName = prompt("请输入您要修改的职位名");
+		if(pName==null){
+			return;
+		}
+		var $td = $("."+pid);
+		$.ajax({
+			url:"${pageContext.request.contextPath}/department/updatePosition",
+			type:"post",
+			data:{pid:pid,pName:pName},
+			dataType:"json",
+			success:function(data){
+				if(data==null){
+					alert("名字为"+pName+"的职位已经存在,请查证后在修改");
+				}else{
+					alert("修改成功");
+					$td.empty();
+					$td.append("<a>"+data.name+"</a>")
+				}
+			},
+			error:function(x,msg,obj){
+				alert(msg);
+			}
+		})
+	}
+	
+	function deletePosition(pid){
+		var pName = $("."+pid).text();
+		if(!confirm("是否确定删除职位名称为"+pName+"的职位")){
+			return;
+		}
+		var $td = $("#"+pid).parent();
+		$.ajax({
+			url:"${pageContext.request.contextPath}/department/deletePosition",
+			type:"post",
+			data:{pid:pid},
+			dataType:"text",
+			success:function(data){
+				if(data=="0"){
+					alert("该职位下面有在职员工，删除失败");
+				}else{
+					alert("删除成功");
+					$td.empty();
 				}
 			},
 			error:function(x,msg,obj){

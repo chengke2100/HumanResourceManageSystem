@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="f" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -18,7 +19,9 @@
 		if(${empty requestScope.resume}){
 			$("select[name='pid']").append("<option>职位</option>");
 		}
-		
+		if(${requestScope.interview.isInterview eq "未确认"}){
+			alert("通知:您有一份面试邀请，请在反馈中查看");
+		}
 		$("select[name='deptId']").change(function(){
 			var did = $(this).val();
 			$.ajax({
@@ -127,6 +130,43 @@
 		$("#update").show();
 	}
 	
+	function feedback(){
+		$(".flag").hide();
+		$("#feedback").show();
+	}
+	
+	function join(interId){
+		if(!confirm("确认参加此次面试吗？")){
+			return;
+		}
+		$.ajax({
+			url:"${pageContext.request.contextPath }/interview/join",
+			type:"post",
+			data:{interId:interId},
+			dataType:"text",
+			success:function(data){
+				$("#isInterview").empty();
+				$("#isInterview").text("按时面试");
+			}
+		})
+	}
+	
+	function skip(interId){
+		if(!confirm("确认取消此次面试吗？")){
+			return;
+		}
+		$.ajax({
+			url:"${pageContext.request.contextPath }/interview/skip",
+			type:"post",
+			data:{interId:interId},
+			dataType:"text",
+			success:function(data){
+				$("#isInterview").empty();
+				$("#isInterview").text("不参加面试");
+			}
+		})
+	}
+	
 	function quit(){
 		if(confirm("是否确认退出？")){
 			return true;	
@@ -140,7 +180,7 @@
 <body>
 	<div id="left">
 		<ul id="navigation" >
-			<li><a href="#">反馈</a></li>
+			<li><a href="javascript:feedback()">反馈</a></li>
 			<li><a href="#" onclick="queryResume()">查看简历</a></li>
 			<li><a href="#" onclick="updatePassword()">修改密码</a></li>
 			<li><a href="${pageContext.request.contextPath }/recruit/showAll" onclick="queryRecuit()">查看招聘信息</a></li>
@@ -148,6 +188,43 @@
 		</ul>
 	</div>
 	<div id="right" >
+		<div class="flag" id="feedback">
+			<form action="#" method="post">
+				<table border="2" cellpadding="10" cellspacing="0">
+					<tr>
+						<td colspan="5" align="center">反馈信息</td>
+					</tr>
+					<tr>
+						<td>投递时间</td>
+						<td>是否查看</td>
+						<td>是否面试</td>
+						<td>面试时间</td>
+						<td>是否录用</td>
+					</tr>
+					<tr>
+						<td><f:formatDate value="${requestScope.interview.apply.deliverTime}" pattern="yyyy-MM-dd"/></td>
+						<td>
+							<c:choose>
+								<c:when test="${requestScope.interview.apply.isRead }">已查看</c:when>
+								<c:otherwise>未查看</c:otherwise>
+							</c:choose>
+						</td>
+						<td id="isInterview">
+							<c:choose>
+								<c:when test="${requestScope.interview.isInterview eq '按时面试' }">按时面试</c:when>
+								<c:when test="${requestScope.interview.isInterview eq '不参加面试' }">不参加面试</c:when>
+								<c:otherwise>
+									<input type="button" value="是" onclick="join(${requestScope.interview.interId})">
+									<input type="button" value="否" onclick="skip(${requestScope.interview.interId})">
+								</c:otherwise>
+							</c:choose>				
+						</td>
+						<td><f:formatDate value="${requestScope.interview.interviewTime }" pattern="yyyy-MM-dd"/></td>
+						<td>${requestScope.interview.isHire }</td>
+					</tr>
+				</table>
+			</form>
+		</div>
 		<form action="${pageContext.request.contextPath }/resume/add" method="post">
 			<input type="hidden" name="resumeId" value="${requestScope.resume.rid }">
 			<table border="2" cellpadding="10" cellspacing="0" id="resume" class="flag" >

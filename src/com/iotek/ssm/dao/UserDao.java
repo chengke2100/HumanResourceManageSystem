@@ -56,4 +56,11 @@ public interface UserDao {
 	 * @return
 	 */
 	List<Integer> queryUsersIdByDeptId(@Param(value="did")Integer did,@Param(value="resignationReason")String resignationReason);
+	/**
+	 * 根据职位id和离职原因来查询员工id
+	 * @param pid
+	 * @param resignationReason
+	 * @return
+	 */
+	List<Integer> queryUsersIdByPidAndResignationReason(@Param(value="pid")Integer pid, @Param(value="resignationReason")String resignationReason);
 }

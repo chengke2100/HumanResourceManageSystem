@@ -34,4 +34,14 @@ public class PositionServiceImpl implements PositionService {
 		return positionDao.queryPositionByName(pName,did);
 	}
 
+	@Override
+	public int updatePositon(Position position) {
+		return positionDao.updatePositon(position);
+	}
+
+	@Override
+	public int deletePosition(Integer pid) {
+		return positionDao.deletePosition(pid);
+	}
+
 }

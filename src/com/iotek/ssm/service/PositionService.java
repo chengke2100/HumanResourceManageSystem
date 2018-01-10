@@ -29,4 +29,8 @@ public interface PositionService {
 	 * @return
 	 */
 	Position getPositionByName(String pName, Integer did);
+	
+	int updatePositon(Position position);
+	
+	int deletePosition(Integer pid);
 }

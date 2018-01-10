@@ -80,20 +80,48 @@ public class DepartmentController {
 	@RequestMapping("addPosition")
 	@ResponseBody
 	public String addPositon(Integer did,String pName) {
-		Department department = departmentService.getDepartmentById(did);
-		Set<Position> positions = department.getPositions();
-		String data = "";
-		for (Position p : positions) {
-			if(p.getName().equals(pName)) {
-				data = JSON.toJSONString(null);//代表此部门下已经有该名字的职位
-			}
-		}
-		if(data.equals("")){
+		Position position = positionService.getPositionByName(pName, did);
+		String data="";
+		if(position!=null) {
+			data = JSON.toJSONString(null);//代表此部门下已经有该名字的职位
+		}else {
 			//名字没有重复
-			Position position = new Position(-1, pName, department, new Date(),null);
+			Department department = departmentService.getDepartmentById(did);
+			position = new Position(-1, pName, department, new Date(),null);
 			positionService.addPosition(position);
 			position =positionService.getPositionByName(pName,did);
 			data = JSON.toJSONString(position);
+		}
+		return data;
+	}
+	
+	@RequestMapping("updatePosition")
+	@ResponseBody
+	public String updatePosition(Integer pid,String pName) {
+		Position position = positionService.getPositionById(pid);
+		Position p = positionService.getPositionByName(pName, position.getDepartment().getDid());
+		String data = "";
+		if(p!=null) {
+			data = JSON.toJSONString(null);//代表此部门下已经有该名字的职位
+		}else {
+			position.setName(pName);
+			positionService.updatePositon(position);
+			data = JSON.toJSONString(position);
+		}
+		return data;
+	}
+	
+	@RequestMapping("deletePosition")
+	@ResponseBody
+	public String deletePosition(Integer pid) {
+		List<Integer> list = UserService.findUsersIdByPid(pid,null);
+		String data="";
+		if(!list.isEmpty()) {
+			//说明职位里面有在职的员工，不能删除部门
+			data = "0";
+		}else {
+			positionService.deletePosition(pid);
+			data = "1";
 		}
 		return data;
 	}

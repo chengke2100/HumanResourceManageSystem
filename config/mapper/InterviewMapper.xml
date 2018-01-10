@@ -9,6 +9,18 @@
 			(#{apply.applyId},#{isInterview},#{interviewTime},#{isHire})
 	</insert>
 	
+	<update id="updateInterview" parameterType="Interview">
+		update 
+			interviews
+		set 
+			is_interview=#{isInterview},interview_time=#{interviewTime},is_hire=#{isHire}
+		where 
+			inter_id=#{interId}
+	</update>
+	
+	<select id="queryInterviewById" resultMap="InterviewResult">
+		select * from apply a,interviews i where a.apply_id=i.apply_id and i.inter_id=#{interId}
+	</select>
 	
 	
 	<select id="queryInterviewByUid" resultMap="InterviewResult">
@@ -17,7 +29,6 @@
 	
 	<resultMap type="Interview" id="InterviewResult">
 		<id property="interId" column="inter_id"/>
-		<result property="userId" column="user_id"/>
 		<result property="isInterview" column="is_interview"/>
 		<result property="interviewTime" column="interview_time"/>
 		<result property="isHire" column="is_hire"/>

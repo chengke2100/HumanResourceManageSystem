@@ -13,12 +13,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.iotek.ssm.entity.Apply;
 import com.iotek.ssm.entity.Department;
+import com.iotek.ssm.entity.Interview;
 import com.iotek.ssm.entity.Position;
 import com.iotek.ssm.entity.Recruit;
 import com.iotek.ssm.entity.Resume;
 import com.iotek.ssm.entity.User;
 import com.iotek.ssm.service.ApplyService;
 import com.iotek.ssm.service.DepartmentService;
+import com.iotek.ssm.service.InterviewService;
 import com.iotek.ssm.service.PositionService;
 import com.iotek.ssm.service.RecruitService;
 import com.iotek.ssm.service.ResumeService;
@@ -36,6 +38,8 @@ public class RecruitController {
 	private ResumeService resumeService;
 	@Autowired
 	private ApplyService applyService;
+	@Autowired
+	private InterviewService interviewService;
 	
 	@RequestMapping("add")
 	public String postJob(Recruit recruit,Integer pid,Model model) {
@@ -64,6 +68,8 @@ public class RecruitController {
 				Department department = departmentService.getDepartmentById(did);
 				resume.getPosition().setDepartment(department);
 			}
+			Interview interview = interviewService.getInterviewByUid(user.getUid());
+			model.addAttribute("interview", interview);
 			model.addAttribute("resume", resume);
 			return "tourist";
 		}

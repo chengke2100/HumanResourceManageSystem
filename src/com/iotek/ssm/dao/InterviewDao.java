@@ -15,4 +15,9 @@ public interface InterviewDao {
 	 * @return
 	 */
 	Interview queryInterviewByUid(int uid);
+	
+	
+	Interview queryInterviewById(Integer interId);
+	
+	int updateInterview(Interview interview);
 }

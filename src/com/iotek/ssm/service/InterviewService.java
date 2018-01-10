@@ -10,4 +10,12 @@ public interface InterviewService {
 	 * @return
 	 */
 	Interview getInterviewByUid(int uid);
+	/**
+	 * 根据面试记录id查询面试记录
+	 * @param interId
+	 * @return
+	 */
+	Interview getInterviewById(Integer interId);
+	
+	int updateInterview(Interview interview);
 }

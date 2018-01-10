@@ -43,4 +43,17 @@
 			<result property="resignationReason" column="resignation_reason"/>
 		</collection>
 	</resultMap>
+	
+	<update id="updatePositon" parameterType="Position">
+		update 
+			positions
+		set 
+			position_name=#{name},dept_id=#{department.did}
+		where
+			p_id=#{pid}
+	</update>
+	
+	<delete id="deletePosition" >
+		delete from positions where p_id=#{pid}
+	</delete>
 </mapper>

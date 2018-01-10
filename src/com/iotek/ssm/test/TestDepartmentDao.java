@@ -53,5 +53,15 @@ public class TestDepartmentDao {
 		Position position = positionDao.queryPositionById(1);
 		System.out.println(position);
 	}
+	
+	@Test
+	public void testupdatePosition() {
+		Position position = positionDao.queryPositionById(11);
+		position.setName("∆’Õ®‘±π§");
+		position.setCreateTime(new Date());
+		int res = positionDao.updatePositon(position);
+		System.out.println(res);
+		
+	}
 
 }

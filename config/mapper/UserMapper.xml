@@ -55,4 +55,8 @@
 	<select id="queryUsersIdByDeptId" resultType="Integer">
 		select u_id from users u,departments d where u.dept_id=d.d_id and u.dept_id=#{did} and u.resignation_reason=#{resignationReason}
 	</select>
+	
+	<select id="queryUsersIdByPidAndResignationReason" resultType="Integer">
+		select u_id from users u,departments d where u.dept_id=d.d_id and u.position_id=#{pid} and u.resignation_reason=#{resignationReason}
+	</select>
 </mapper>

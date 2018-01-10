@@ -39,4 +39,9 @@ public class UserServiceImpl implements UserService {
 		return userDao.queryUsersIdByDeptId(did, resignationReason);
 	}
 
+	@Override
+	public List<Integer> findUsersIdByPid(Integer pid, String resignationReason) {
+		return userDao.queryUsersIdByPidAndResignationReason(pid,resignationReason);
+	}
+
 }

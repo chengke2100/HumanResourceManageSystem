@@ -21,4 +21,14 @@ public class InterviewServiceImpl implements InterviewService {
 		return interviewDao.queryInterviewByUid(uid);
 	}
 
+	@Override
+	public Interview getInterviewById(Integer interId) {
+		return interviewDao.queryInterviewById(interId);
+	}
+
+	@Override
+	public int updateInterview(Interview interview) {
+		return interviewDao.updateInterview(interview);
+	}
+
 }
