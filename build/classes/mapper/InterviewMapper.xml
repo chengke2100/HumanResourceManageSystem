@@ -27,6 +27,10 @@
 		select * from apply a,interviews i where a.apply_id=i.apply_id and a.user_id=#{userId}
 	</select>
 	
+	<select id="queryInterviewByIsInterview" resultMap="InterviewResult">
+		select * from apply a,interviews i where a.apply_id=i.apply_id and i.is_interview=#{interviewTime} and a.status=#{status}
+	</select>
+	
 	<resultMap type="Interview" id="InterviewResult">
 		<id property="interId" column="inter_id"/>
 		<result property="isInterview" column="is_interview"/>
@@ -40,4 +44,5 @@
 			<result property="status" column="status"/>
 		</association>
 	</resultMap>
+	
 </mapper>

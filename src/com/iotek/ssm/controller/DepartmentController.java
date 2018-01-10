@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,9 +17,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSON;
 import com.iotek.ssm.entity.Department;
 import com.iotek.ssm.entity.Position;
+import com.iotek.ssm.entity.User;
 import com.iotek.ssm.service.DepartmentService;
 import com.iotek.ssm.service.PositionService;
 import com.iotek.ssm.service.UserService;
+import com.iotek.ssm.util.MyUtil;
 
 @Controller
 @RequestMapping("department")
@@ -27,19 +31,28 @@ public class DepartmentController {
 	@Autowired
 	private PositionService positionService;
 	@Autowired
-	private UserService UserService;
+	private UserService userService;
 	
 	@ResponseBody
 	@RequestMapping("updateDepartment")
-	public String updateDepartment(Integer did,String deptName) {
+	public String updateDepartment(Integer did,String deptName,HttpSession session) {
 		Boolean res = departmentService.checkDeptName(deptName);
 		String data=null;
 		if(res) {
 			data=JSON.toJSONString(null);//代表部门名已存在
 		}else {
 			Department department = departmentService.getDepartmentById(did);
+			//更改部门管理员账号的帐户名
+			User user = userService.getUserByName(department.getDeptName());
+			user.setUserName(deptName);
+			userService.updateUser(user);
+			//更改部门信息
 			department.setDeptName(deptName);
 			departmentService.updateDepartment(department);
+			
+			//将session里面的部门信息更新
+			List<Department> departments = departmentService.findAllDepartments();
+			session.setAttribute("departments", departments);
 			data = JSON.toJSONString(department);
 		}
 		return data;
@@ -47,14 +60,21 @@ public class DepartmentController {
 	
 	@RequestMapping("deleteDepartment")
 	@ResponseBody
-	public String deleteDepartment(Integer did) {
-		List<Integer> list = UserService.findUsersIdByDid(did,null);
+	public String deleteDepartment(Integer did,HttpSession session) {
+		Department department = departmentService.getDepartmentById(did);
+		Set<Position> positions = department.getPositions();
 		String data="";
-		if(!list.isEmpty()) {
-			//说明部门里面有在职的员工，不能删除部门
+		if(!positions.isEmpty()) {
+			//说明部门里面有职位，不能删除部门
 			data = "0";
 		}else {
+			//先将部门管理员账号删除
+			userService.deleteDepartmentManager(did);
+			//删除部门
 			departmentService.deleteDepartment(did);
+			//将session里面的部门信息更新
+			List<Department> departments = departmentService.findAllDepartments();
+			session.setAttribute("departments", departments);
 			data = "1";
 		}
 		return data;
@@ -62,7 +82,7 @@ public class DepartmentController {
 	
 	@RequestMapping("addDepartment")
 	@ResponseBody
-	public String addDepartment(String deptName) {
+	public String addDepartment(String deptName,HttpSession session) {
 		Boolean res = departmentService.checkDeptName(deptName);
 		String data = null;
 		if(res) {
@@ -71,7 +91,13 @@ public class DepartmentController {
 			Department department = new Department(-1, deptName, new Date(), null);
 			departmentService.addDepartment(department);
 			department=departmentService.getDepartmentByName(deptName);//需要重新从数据库把添加的部门查询出来此对象才会有合法的id
-			System.out.println(department);
+			//生成一个新的部门管理员账号
+			String password = MyUtil.md5("123");
+			User user = new User(-1, deptName, password, 2, null, department, null, null);
+			userService.addUser(user);
+			//将session里面的部门信息更新
+			List<Department> departments = departmentService.findAllDepartments();
+			session.setAttribute("departments", departments);
 			data = JSON.toJSONString(department);
 		}
 		return data;
@@ -114,10 +140,10 @@ public class DepartmentController {
 	@RequestMapping("deletePosition")
 	@ResponseBody
 	public String deletePosition(Integer pid) {
-		List<Integer> list = UserService.findUsersIdByPid(pid,null);
+		List<Integer> list = userService.findUsersIdByPid(pid,null);
 		String data="";
 		if(!list.isEmpty()) {
-			//说明职位里面有在职的员工，不能删除部门
+			//说明职位里面有在职的员工，不能删除
 			data = "0";
 		}else {
 			positionService.deletePosition(pid);

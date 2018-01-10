@@ -42,6 +42,10 @@
 		<result property="status" column="status"/>
 		<association property="recruit" javaType="Recruit">
 			<id property="recruitsId" column="recruits_id"/>
+			<result property="companyName" column="company_name"/>
+			<result property="jobInformation" column="job_information"/>
+			<result property="requirements" column="requirements"/>
+			<result property="salary" column="salary"/>
 		</association>
 	</resultMap>
 </mapper>

@@ -19,7 +19,12 @@
 	</update>
 	
 	<select id="queryUserById" resultMap="UserResult">
-		select * from users u,departments d,positions p where u.dept_id=d.d_id and u.position_id=p.p_id and u.u_id=#{uid}
+		select 
+			* 
+		from 
+			(users u left join departments d on u.dept_id=d.d_id) left join positions p on u.position_id=p.p_id 
+		where 
+			u.u_id=#{uid}
 	</select>
 
 	
@@ -59,4 +64,12 @@
 	<select id="queryUsersIdByPidAndResignationReason" resultType="Integer">
 		select u_id from users u,departments d where u.dept_id=d.d_id and u.position_id=#{pid} and u.resignation_reason=#{resignationReason}
 	</select>
+	
+	<select id="queryUserByName" resultMap="UserResult">
+		select * from users u where u.user_name=#{userName}
+	</select>
+	
+	<delete id="deleteDepartmentManager">
+		delete from users where type='2' and dept_id=#{did}
+	</delete>
 </mapper>

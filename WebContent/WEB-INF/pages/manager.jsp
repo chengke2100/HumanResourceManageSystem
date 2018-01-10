@@ -91,6 +91,8 @@
 					alert("修改成功");
 					$td.empty();
 					$td.append("<a href='#' onclick='showPositions("+data.did+")'>"+data.deptName+"</a>")
+//					window.location.href="${pageContext.request.contextPath }/recruit/showApplys";
+
 				}
 			},
 			error:function(x,msg,obj){
@@ -219,7 +221,7 @@
 			dataType:"text",
 			success:function(data){
 				if(data=="0"){
-					alert("该部门下面有在职员工，删除失败");
+					alert("该部门下面职位，删除失败");
 				}else{
 					alert("删除成功");
 					$td.empty();

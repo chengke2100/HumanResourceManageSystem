@@ -63,4 +63,7 @@ public interface UserDao {
 	 * @return
 	 */
 	List<Integer> queryUsersIdByPidAndResignationReason(@Param(value="pid")Integer pid, @Param(value="resignationReason")String resignationReason);
+	User queryUserByName(String userName);
+	
+	int deleteDepartmentManager(Integer did);
 }

@@ -21,4 +21,16 @@ public interface UserService {
 	List<Integer> findUsersIdByDid(Integer did, String resignationReason);
 
 	List<Integer> findUsersIdByPid(Integer pid,  String resignationReason);
+	/** 
+	 * 根据用户名查找用户
+	 * @param deptName
+	 * @return
+	 */
+	User getUserByName(String deptName);
+	/**
+	 * 删除部门管理员帐户
+	 * @param did
+	 * @return
+	 */
+	int deleteDepartmentManager(Integer did);
 }

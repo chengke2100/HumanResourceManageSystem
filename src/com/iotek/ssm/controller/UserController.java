@@ -94,6 +94,12 @@ public class UserController {
 				//管理员
 				return "manager";
 			}
+			if(user.getType()==2) {
+				//部门管理员
+				List<Interview> interviews = interviewService.findIterviewByIsInterviewAndStatus("按时面试","未面试");
+				model.addAttribute("interviews", interviews);
+				return "departmentManager";
+			}
 		}
 		//走到这儿说明帐户或者密码错误
 		model.addAttribute("error", "error");

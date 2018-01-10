@@ -31,10 +31,9 @@ public class TestUserDao {
 	
 	@Test
 	public void testqueryUserById() {
-		User user = userDao.queryUserById(2);
-		user.setUserName("kska");
-		int res = userDao.updateUser(user);
-		System.out.println(res);
+		User user = userDao.queryUserById(8);
+		
+		System.out.println(user);
 	}
 	
 	@Test

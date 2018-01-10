@@ -1,5 +1,9 @@
 package com.iotek.ssm.dao;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.iotek.ssm.entity.Interview;
 
 public interface InterviewDao {
@@ -20,4 +24,6 @@ public interface InterviewDao {
 	Interview queryInterviewById(Integer interId);
 	
 	int updateInterview(Interview interview);
+	
+	List<Interview> queryInterviewByIsInterviewAndStatus(@Param(value="isInterview")String isInterview,@Param("status")String status);
 }
