@@ -245,14 +245,14 @@
 						<input type="radio" value="女" name="sex" checked="checked">女
 					</c:if>
 					<c:if test="${empty requestScope.resume.sex}">
-						<input type="radio" value="男" name="sex">男
+						<input type="radio" value="男" name="sex" checked="checked">男
 						<input type="radio" value="女" name="sex">女
 					</c:if>
 					</td>			
 				</tr>
 				<tr>
 					<td>年龄</td>
-					<td><input type="number" name="age" value="${requestScope.resume.age }"></td>
+					<td><input type="number" name="age" value="${requestScope.resume.age }" required="required"></td>
 					<td>学历</td>
 					<td>
 						<select name="education">
@@ -266,20 +266,20 @@
 				</tr>
 				<tr>
 					<td>联系方式</td>
-					<td><input type="tel" name="phoneNumber"  value="${requestScope.resume.phoneNumber }"></td>
+					<td><input type="tel" name="phoneNumber"  value="${requestScope.resume.phoneNumber }" required="required"></td>
 					<td>e-mail</td>
-					<td><input type="email" name="email" value="${requestScope.resume.email }"></td>
+					<td><input type="email" name="email" value="${requestScope.resume.email }" required="required"></td>
 				</tr>
 				<tr>
 					<td>应聘职位</td>
 					<td>
-						<select name="deptId">
+						<select name="deptId" required="required">
 							<option>部门</option>
 							<c:forEach items="${sessionScope.departments }" var="department">
 								<option value="${department.did }" <c:if test="${department.did==requestScope.resume.position.department.did }">selected</c:if>>${department.deptName }</option>
 							</c:forEach>
 						</select>
-						<select name="pid">
+						<select name="pid" required="required">
 							<c:forEach items="${requestScope.resume.position.department.positions }" var="position">
 								<option value="${position.pid }" <c:if test="${requestScope.resume.position.pid==position.pid }">selected</c:if> >${position.name }</option>
 							</c:forEach>
@@ -295,9 +295,9 @@
 				</tr>
 				<tr>
 					<td>上份工作</td>
-					<td><input type="text" name="previousJob" value="${requestScope.resume.previousJob }"></td>
+					<td><input type="text" name="previousJob" value="${requestScope.resume.previousJob }" required="required"></td>
 					<td>工作经验</td>
-					<td><input type="text" name="workExperience" value="${requestScope.resume.workExperience }"></td>
+					<td><input type="text" name="workExperience" value="${requestScope.resume.workExperience }" required="required"></td>
 				</tr>
 				<tr>
 					<td>期望薪资</td>
@@ -310,7 +310,7 @@
 						</select>
 					</td>
 					<td>兴趣爱好</td>
-					<td><input type="text" name="hobbys" value="${requestScope.resume.hobbys }"></td>
+					<td><input type="text" name="hobbys" value="${requestScope.resume.hobbys }" required="required"></td>
 				</tr>
 				<tr>
 					<td colspan="2" align="center"><input type="submit" value="保存"></td>

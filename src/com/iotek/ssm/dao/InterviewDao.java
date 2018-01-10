@@ -25,5 +25,5 @@ public interface InterviewDao {
 	
 	int updateInterview(Interview interview);
 	
-	List<Interview> queryInterviewByIsInterviewAndStatus(@Param(value="isInterview")String isInterview,@Param("status")String status);
+	List<Interview> queryInterviewByIsInterviewAndStatus(@Param(value="isInterview")String isInterview,@Param(value="status")String status);
 }

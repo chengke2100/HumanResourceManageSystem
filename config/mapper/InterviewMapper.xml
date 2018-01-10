@@ -27,8 +27,8 @@
 		select * from apply a,interviews i where a.apply_id=i.apply_id and a.user_id=#{userId}
 	</select>
 	
-	<select id="queryInterviewByIsInterview" resultMap="InterviewResult">
-		select * from apply a,interviews i where a.apply_id=i.apply_id and i.is_interview=#{interviewTime} and a.status=#{status}
+	<select id="queryInterviewByIsInterviewAndStatus" resultMap="InterviewResult">
+		select * from apply a,interviews i where a.apply_id=i.apply_id and i.is_interview=#{isInterview} and a.status=#{status}
 	</select>
 	
 	<resultMap type="Interview" id="InterviewResult">

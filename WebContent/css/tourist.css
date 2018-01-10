@@ -26,6 +26,9 @@ div#right {
  /* 	background: #619ec2;  */
 	margin: 5% 5% 0 0;
 }
+div#right2{
+	float: right;
+}
 
 ul#navigation {
 	margin-left: -40px; margin-top : 25px;

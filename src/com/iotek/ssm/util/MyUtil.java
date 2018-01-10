@@ -2,6 +2,8 @@ package com.iotek.ssm.util;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Calendar;
+import java.util.Date;
 
 public class MyUtil {
 	/**
@@ -29,5 +31,25 @@ public class MyUtil {
 		}
 		return buffer.toString();
 	}
-
+	/**
+	 * 统计某年某月的工作日
+	 * @param year
+	 * @param month
+	 * @return
+	 */
+	public static int getWorkdays(int year,int month) {
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR,year);
+		cal.set(Calendar.MONTH,month-1);
+		cal.set(Calendar.DATE,1);
+		int count=0;
+		while(cal.get(Calendar.MONTH)<month) {
+			int day = cal.get(Calendar.DAY_OF_WEEK);
+			if(!(day==Calendar.SUNDAY||day==Calendar.SATURDAY)) {
+				count++;
+			}
+		}
+		return count;
+	}
+	
 }

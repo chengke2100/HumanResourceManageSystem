@@ -25,7 +25,7 @@
 		if(${!empty requestScope.nohire}){
 			alert("拒绝成功");
 		}
-		
+	})
 		/* $("select[name='deptId']").change(function(){
 			var did = $(this).val();
 			$.ajax({
@@ -124,8 +124,8 @@
 					}
 				}
 			})
-		}
-	} */
+		}*/
+
 
 	function inform(){
 		$(".flag").hide();
@@ -144,7 +144,8 @@
 	
 	function noHire(){
 		var interId = $("input[name='interId']").val();
-		window.location.href = ${pageContext.request.contextPath}+"interview/noHire/{"+interId+"}";
+		alert(interId);
+		window.location.href = "${pageContext.request.contextPath}/interview/noHire/"+interId;
 	}
 	
 	function quit(){

@@ -2,7 +2,6 @@ package com.iotek.ssm.controller;
 
 
 
-
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,5 +63,25 @@ public class ResumeController {
 		//为了在生成InterView对象的时候有apply，所以还要把applyId传回去
 		model.addAttribute("applyId", applyId);
 		return "manager";
+	}
+	
+	@RequestMapping("showInformation")
+	public String showInformation(HttpSession session,Model model) {
+		User user = (User) session.getAttribute("user");
+		Resume resume = resumeService.getResumeByUid(user.getUid());
+		model.addAttribute("resume", resume);
+		return "employee";
+	}
+	
+	@RequestMapping("saveInformation")
+	public String saveInformation(HttpSession session,int age,String phoneNumber,String email,String hobbys) {
+		User user = (User) session.getAttribute("user");
+		Resume resume = resumeService.getResumeByUid(user.getUid());
+		resume.setAge(age);
+		resume.setPhoneNumber(phoneNumber);
+		resume.setEmail(email);
+		resume.setHobbys(hobbys);
+		resumeService.updateResume(resume);
+		return "employee";
 	}
 }

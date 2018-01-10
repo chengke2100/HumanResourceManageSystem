@@ -71,15 +71,15 @@ public class InterviewController {
 	
 	@RequestMapping("hire")
 	public String hire(Integer interId,HttpSession session,Model model) {
-		User user = (User) session.getAttribute("user");
-		user = interviewService.doHire(interId,user.getUid());
+		Interview interview = interviewService.getInterviewById(interId);
+		User user = interviewService.doHire(interId,interview.getApply().getUserId());
 		session.setAttribute("user", user);
 		model.addAttribute("hire", "hire");
 		return "departmentManager";
 	}
 	
 	@RequestMapping("noHire/{interId}")
-	public String hire(Integer interId,Model model) {
+	public String hire(@PathVariable("interId")Integer interId,Model model) {
 		interviewService.noHire(interId);
 		model.addAttribute("nohire", "nohire");
 		return "departmentManager";

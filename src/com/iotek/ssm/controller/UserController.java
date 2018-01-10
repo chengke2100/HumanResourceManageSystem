@@ -97,8 +97,13 @@ public class UserController {
 			if(user.getType()==2) {
 				//部门管理员
 				List<Interview> interviews = interviewService.findIterviewByIsInterviewAndStatus("按时面试","未面试");
+				System.out.println(interviews);
 				model.addAttribute("interviews", interviews);
 				return "departmentManager";
+			}
+			if(user.getType()==3) {
+				//员工
+				return "employee";
 			}
 		}
 		//走到这儿说明帐户或者密码错误
