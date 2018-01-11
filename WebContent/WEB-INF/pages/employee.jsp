@@ -13,8 +13,30 @@
 	$(function(){
 		$(".flag").hide();
 		$("#right2").show();
-		if(${!empty requstScope.resume}){
+		if(${!empty requestScope.resume}){
+			$(".flag").hide();
 			$("#information").show();
+		}
+		if(${!empty requestScope.clockingIn.beginTime}){
+			$("input[name='clockin']").attr("disabled","disabled");
+		}
+		if(${!empty requestScope.clockingIn.endTime}){
+			$("input[name='clockout']").attr("disabled","disabled");
+		}
+		if(${!empty requestScope.clockin}){
+			alert("打卡成功");
+			$("input[name='clockin']").attr("disabled","disabled");
+		}
+		if(${!empty requestScope.clockout}){
+			alert("打卡成功");
+			$("input[name='clockout']").attr("disabled","disabled");
+		}
+		if(${!empty requestScope.absenteeismDays}){
+			$(".flag").hide();
+			$("#clockingIn").show();
+		}
+		if(${!empty requestScope.message}){
+			alert("您还没有上班打卡，不能直接打下班卡，打卡失败");
 		}
 		$("input[name='oldPassword']").blur(function(){
 			var oldPassword = $(this).val();
@@ -59,6 +81,16 @@
 			})
 			return false;
 		})
+		$("select[name='year']").change(function(){
+			var year = $(this).val();
+			var month = $("select[name='month']").val();
+			window.location.href="${pageContext.request.contextPath}/pay/showClockingIn/"+year+"/"+month;
+		})
+		$("select[name='month']").change(function(){
+			var month = $(this).val();
+			var year = $("select[name='year']").val();
+			window.location.href="${pageContext.request.contextPath}/pay/showClockingIn/"+year+"/"+month;
+		})
 	})
 	
 	
@@ -81,7 +113,7 @@
 	<div id="left">
 		<ul id="navigation" >
 			<li><a href="${pageContext.request.contextPath }/resume/showInformation">个人信息</a></li>
-			<li><a href="#" onclick="queryResume()">我的考勤</a></li>
+			<li><a href="${pageContext.request.contextPath }/pay/showClockingIn/0/0" >我的考勤</a></li>
 			<li><a href="#" onclick="updatePassword()">修改密码</a></li>
 			<li><a href="#">我的奖惩</a></li>
 			<li><a href="#">部门职位</a></li>
@@ -90,6 +122,14 @@
 		</ul>
 	</div>
 	<div id="right" >
+		<div id="right2" class="flag">
+			<form action="${pageContext.request.contextPath }/pay/clockin" method="post">
+				<input type="submit" value="上班打卡" name="clockin">
+			</form><br/>
+			<form action="${pageContext.request.contextPath }/pay/clockout" method="post">
+				<input type="submit" value="下班打卡" name="clockout">
+			</form>
+		</div>
 		<div class="flag" id="information">
 			<form action="${pageContext.request.contextPath }/resume/saveInformation" method="post">
 				<table border="2" cellpadding="10" cellspacing="0">
@@ -98,24 +138,15 @@
 					</tr>
 					<tr>
 						<td>真实姓名</td>
-						<td><input type="text" name="realName" value="${requestScope.resume.realName }" readonly="readonly" ></td>
+						<td>${requestScope.resume.realName }</td>
 						<td>性别</td>
-						<td>
-							<c:if test="${requestScope.resume.sex eq '男'}">
-								<input type="radio" value="男" name="sex" checked="checked" readonly="readonly">男
-								<input type="radio" value="女" name="sex" readonly="readonly">女
-							</c:if>
-							<c:if test="${requestScope.resume.sex eq '女'}">
-								<input type="radio" value="男" name="sex"readonly="readonly">男
-								<input type="radio" value="女" name="sex" checked="checked"readonly="readonly">女
-							</c:if>
-						</td>
+						<td>${requestScope.resume.sex }</td>
 					</tr>
 					<tr>
 						<td>年龄</td>
-						<td><input type="number" name="age" value="${requestScope.resume.age }" required="required"></td>
+						<td><input type="number" name="age" value="${requestScope.resume.age }"></td>
 						<td>学历</td>
-						<td><input type="text" value="${requestScope.resume.education }" readonly="readonly"></td>
+						<td>${requestScope.resume.education }</td>
 					</tr>
 					<tr>
 						<td>联系方式</td>
@@ -130,7 +161,7 @@
 							${requestScope.resume.position.name }
 						</td>
 						<td>政治面貌</td>
-						<td><input type="text" value="${requestScope.resume.politicalStatus }" readonly="readonly"></td>
+						<td>${requestScope.resume.politicalStatus }</td>
 					</tr>
 					<tr>
 						<td>入职时间</td>
@@ -156,14 +187,55 @@
 				<input type="submit" value="修改" name="update">
 			</form>
 		</div>
-		<div align="center" class="flag" id="queryRecruits">
-			<!-- 考勤 -->
+		<div align="center" class="flag" id="clockingIn">
+			<form action="#" method="post" >
+				<select name="year">
+					<option <c:if test="${requestScope.year==2016 }">selected</c:if>>2016</option>
+					<option <c:if test="${requestScope.year==2017 }">selected</c:if>>2017</option>
+					<option <c:if test="${requestScope.year==2018 }">selected</c:if>>2018</option>
+				</select>
+				<select name="month">
+					<option <c:if test="${requestScope.month==1 }">selected</c:if>>1</option>
+					<option <c:if test="${requestScope.month==2 }">selected</c:if>>2</option>
+					<option <c:if test="${requestScope.month==3 }">selected</c:if>>3</option>
+					<option <c:if test="${requestScope.month==4 }">selected</c:if>>4</option>
+					<option <c:if test="${requestScope.month==5 }">selected</c:if>>5</option>
+					<option <c:if test="${requestScope.month==6 }">selected</c:if>>6</option>
+					<option <c:if test="${requestScope.month==7 }">selected</c:if>>7</option>
+					<option <c:if test="${requestScope.month==8 }">selected</c:if>>8</option>
+					<option <c:if test="${requestScope.month==9 }">selected</c:if>>9</option>
+					<option <c:if test="${requestScope.month==10 }">selected</c:if>>10</option>
+					<option <c:if test="${requestScope.month==11 }">selected</c:if>>11</option>
+					<option <c:if test="${requestScope.month==12 }">selected</c:if>>12</option>
+				</select>
+				该月目前缺勤天数:${requestScope.absenteeismDays }天
+			</form>
+			<table border="2" cellpadding="10" cellspacing="0">
+				<tr>
+					<td>上班时间</td>
+					<td>下班时间</td>
+					<td>是否迟到</td>
+					<td>是否早退</td>
+				</tr>
+				<c:choose>
+					<c:when test="${!empty requestScope.clockingIns }">
+						<c:forEach items="${requestScope.clockingIns }"  var="clockingIn">
+							<tr>
+								<td><f:formatDate value="${clockingIn.beginTime }" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+								<td><f:formatDate value="${clockingIn.endTime }" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+								<td>${clockingIn.isLate }</td>
+								<td>${clockingIn.isEarly }</td>
+							</tr>
+						</c:forEach>
+					</c:when>
+					<c:otherwise>
+						<tr>
+							<td colspan="4" align="center">暂未考勤</td>
+						</tr>
+					</c:otherwise>
+				</c:choose>
+			</table>
 		</div>
 	</div>
-	<div id="right2" class="flag">
-		<form action="${pageContext.request.contextPath }/pay/clockin" method="post">
-			<input type="submit" value="上班打卡">
-		</form>
-	</div>
-</body>
+	</body>
 </html>

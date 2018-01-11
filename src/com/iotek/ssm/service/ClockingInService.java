@@ -39,4 +39,13 @@ public interface ClockingInService {
 	 * @return
 	 */
 	int findAbsenteeismDays(int uid, int year, int month);
+	/**
+	 * 查询指定员工某天的打卡记录
+	 * @param userId
+	 * @param year
+	 * @param month
+	 * @param day
+	 * @return
+	 */
+	ClockingIn findClockingInByUidAndTime(int userId, int year, int month, int day);
 }

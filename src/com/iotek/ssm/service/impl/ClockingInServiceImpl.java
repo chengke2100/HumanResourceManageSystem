@@ -38,4 +38,9 @@ public class ClockingInServiceImpl implements ClockingInService {
 		return clockingInDao.queryAbsenteeismDays(userId, year, month);
 	}
 
+	@Override
+	public ClockingIn findClockingInByUidAndTime(int userId, int year, int month, int day) {
+		return clockingInDao.queryClockingInByUidAndTime(userId,year,month,day);
+	}
+
 }

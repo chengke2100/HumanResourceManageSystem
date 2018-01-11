@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.iotek.ssm.dao.ClockingInDao">
+<mapper namespace="com.iotek.ssm.dao.SalaryDao">
 	<insert id="insertClockingin" parameterType="ClockingIn" >
 		insert into 
 			clockingin(user_id,begin_time, end_time,is_late,is_early,absenteeism_days,year,month,day)

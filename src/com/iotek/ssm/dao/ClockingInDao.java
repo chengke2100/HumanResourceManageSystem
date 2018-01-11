@@ -16,4 +16,6 @@ public interface ClockingInDao {
 	List<ClockingIn> queryClockingInByUid(@Param("userId")int userId,@Param("year")int year,@Param("month")int month);
 	
 	int queryAbsenteeismDays(@Param("userId")int userId,@Param("year")int year,@Param("month")int month);
+
+	ClockingIn queryClockingInByUidAndTime(@Param("userId")int userId, @Param("year")int year, @Param("month")int month, @Param("day")int day);
 }

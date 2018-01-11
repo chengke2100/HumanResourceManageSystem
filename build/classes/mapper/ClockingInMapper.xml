@@ -6,14 +6,14 @@
 		insert into 
 			clockingin(user_id,begin_time, end_time,is_late,is_early,absenteeism_days,year,month,day)
 		values
-			(#{user.userId},#{beginTime},#{endTime},#{isLate},#{isEarly},#{absenteeismDays},#{year},#{month},#{day})
+			(#{user.uid},#{beginTime},#{endTime},#{isLate},#{isEarly},#{absenteeismDays},#{year},#{month},#{day})
 	</insert>
 	
 	<update id="updateClockingin" parameterType="ClockingIn">
 		update 
 			clockingin
 		set 
-			begin_time=#{beginTime},end_time=#{endTime},is_late=#{isLate},is_early=#{isEarly}
+			begin_time=#{beginTime},end_time=#{endTime},is_late=#{isLate},is_early=#{isEarly},
 			absenteeism_days=#{absenteeismDays},year=#{year},month=#{month},day=#{day}
 		where
 			clo_id=#{cloId}
@@ -40,7 +40,7 @@
 	</select>
 	
 	
-	<select id="queryAbsenteeismDays">
+	<select id="queryAbsenteeismDays" resultType="Integer">
 		select 
 			min(absenteeism_days)
 		from 
@@ -55,6 +55,23 @@
 			c.month=#{month}
 	</select>
 	
+	
+	<select id="queryClockingInByUidAndTime" resultMap="ClockingInResult">
+		select 
+			* 
+		from 
+			clockingin c,users u 
+		where 
+			c.user_id=u.u_id 
+		and 
+			c.user_id=#{userId}
+		and
+			c.year=#{year}
+		and
+			c.month=#{month}
+		and
+			c.day=#{day}
+	</select>
 	
 	<resultMap type="ClockingIn" id="ClockingInResult">
 		<id property="cloId" column="clo_id"/>

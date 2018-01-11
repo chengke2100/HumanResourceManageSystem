@@ -28,6 +28,7 @@ div#right {
 }
 div#right2{
 	float: right;
+	margin: 5% 5% 0 0;
 }
 
 ul#navigation {

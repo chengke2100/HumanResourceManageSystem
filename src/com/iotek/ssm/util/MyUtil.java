@@ -48,6 +48,7 @@ public class MyUtil {
 			if(!(day==Calendar.SUNDAY||day==Calendar.SATURDAY)) {
 				count++;
 			}
+			cal.add(Calendar.DATE, 1);
 		}
 		return count;
 	}

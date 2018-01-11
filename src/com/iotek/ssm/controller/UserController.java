@@ -1,5 +1,6 @@
 package com.iotek.ssm.controller;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 
@@ -12,11 +13,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
+import com.iotek.ssm.entity.ClockingIn;
 import com.iotek.ssm.entity.Department;
 import com.iotek.ssm.entity.Interview;
 import com.iotek.ssm.entity.Position;
 import com.iotek.ssm.entity.Resume;
 import com.iotek.ssm.entity.User;
+import com.iotek.ssm.service.ClockingInService;
 import com.iotek.ssm.service.DepartmentService;
 import com.iotek.ssm.service.InterviewService;
 import com.iotek.ssm.service.ResumeService;
@@ -34,6 +37,8 @@ public class UserController {
 	private ResumeService resumeService;
 	@Autowired
 	private InterviewService interviewService;
+	@Autowired
+	private ClockingInService clockingInService;
 
 	@RequestMapping("loginPage")
 	public String goLoginPage() {
@@ -97,12 +102,17 @@ public class UserController {
 			if(user.getType()==2) {
 				//部门管理员
 				List<Interview> interviews = interviewService.findIterviewByIsInterviewAndStatus("按时面试","未面试");
-				System.out.println(interviews);
 				model.addAttribute("interviews", interviews);
 				return "departmentManager";
 			}
 			if(user.getType()==3) {
 				//员工
+				Calendar cal = Calendar.getInstance();
+				int year = cal.get(Calendar.YEAR);
+				int month = cal.get(Calendar.MONTH)+1;
+				int day=cal.get(Calendar.DATE);
+				ClockingIn clockingIn = clockingInService.findClockingInByUidAndTime(user.getUid(), year, month, day);
+				model.addAttribute("clockingIn", clockingIn);
 				return "employee";
 			}
 		}

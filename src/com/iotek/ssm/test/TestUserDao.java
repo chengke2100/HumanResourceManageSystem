@@ -13,6 +13,7 @@ import com.iotek.ssm.dao.InterviewDao;
 import com.iotek.ssm.dao.UserDao;
 import com.iotek.ssm.entity.Interview;
 import com.iotek.ssm.entity.User;
+import com.iotek.ssm.util.MyUtil;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"classpath:spring.xml","classpath:spring-mybatis.xml","classpath:spring-mvc.xml"})
@@ -66,6 +67,12 @@ public class TestUserDao {
 		interview.setIsInterview("∞¥ ±√Ê ‘");
 		int res = interviewDao.updateInterview(interview);
 		System.out.println(res);
+	}
+	
+	@Test
+	public void testUtil() {
+		int workdays = MyUtil.getWorkdays(2018, 1);
+		System.out.println(workdays);
 	}
 	
 }
