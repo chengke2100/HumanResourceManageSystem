@@ -30,6 +30,9 @@
 		if(${!empty requestScope.recruits}){
 			$("#showJobs").show();
 		}
+		if(${requestScope.employees!=null}){
+			$("#employee").show();
+		}
 		$("select[name='deptId']").change(function(){
 			var did = $(this).val();
 			var $sel = $(this);
@@ -46,6 +49,10 @@
 					})
 				}
 			})
+		})
+		$("select[name='isOnJob']").change(function(){
+			var isOnJob = $(this).val();
+			window.location.href="${pageContext.request.contextPath }/employee/showEmployees/"+isOnJob;
 		})
 		
 	})
@@ -261,6 +268,13 @@
 		})
 	}
 	
+	function transfer(userId){
+		url:"${pageContext.request.contextPath}/employee/transfer",
+		type:"post",
+		data:{userId:userId},
+		dataType:"json",
+		//写到此处
+	}
 	function quit(){
 		if(confirm("是否确认退出？")){
 			return true;	
@@ -280,7 +294,7 @@
 			<li><a href="${pageContext.request.contextPath }/recruit/showApplys">应聘管理</a></li>
 			<li><a href="#" onclick="showDepartment()">部门职位</a></li>
 			<li><a href="#">培训管理</a></li>
-			<li><a href="#">员工管理</a></li>
+			<li><a href="${pageContext.request.contextPath }/employee/showEmployees/在职员工">员工管理</a></li>
 			<li><a href="#">奖罚管理</a></li>
 			<li><a href="#">薪资管理</a></li>
 			<li><a href="#">工资异议</a></li>
@@ -489,6 +503,31 @@
 			<div style="float:left" class="position">
 				
 			</div>
+		</div>
+		<div class="flag" id="employee">
+			<form action="#" method="post">
+				<select name="isOnJob">
+					<option <c:if test="${requestScope.isOnJob eq '在职员工'}">selected</c:if> >在职员工</option>
+					<option <c:if test="${requestScope.isOnJob eq '离职员工'}">selected</c:if> >离职员工</option>
+				</select>
+				<table border="2" cellpadding="10" cellspacing="0">
+					<tr>
+						<td>编号</td>
+						<td>姓名</td>
+						<td colspan="4" align="center">操作</td>
+					</tr>
+					<c:forEach items="${requestScope.employees }" var="employee">
+						<tr>
+							<td>${employee.userId }</td>
+							<td><a href="#">${employee.realName }</a></td>
+							<td><a href="javascript:transfer(${employee.userId })">人事调动</a></td>
+							<td><a href="#">考勤</a></td>
+							<td><a href="#">工资发放</a></td>
+							<td><a href="#">开除</a></td>
+						</tr>
+					</c:forEach>
+				</table>
+			</form>
 		</div>
 	</div>
 </body>

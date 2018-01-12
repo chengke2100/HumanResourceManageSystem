@@ -70,9 +70,9 @@ public class InterviewController {
 	}
 	
 	@RequestMapping("hire")
-	public String hire(Integer interId,HttpSession session,Model model) {
+	public String hire(Integer interId,HttpSession session,Integer basicPay,Model model) {
 		Interview interview = interviewService.getInterviewById(interId);
-		User user = interviewService.doHire(interId,interview.getApply().getUserId());
+		User user = interviewService.doHire(interId,interview.getApply().getUserId(),basicPay);
 		session.setAttribute("user", user);
 		model.addAttribute("hire", "hire");
 		return "departmentManager";

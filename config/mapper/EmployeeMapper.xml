@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iotek.ssm.dao.EmployeeDao">
+
+	<select id="queryEmployeesByIsOnJob" resultMap="EmployeeResult">
+		select 
+			u.u_id,r.real_name
+		from 
+			resumes r,users u 
+		where 
+			r.u_id=u.u_id 
+		and 
+			u.resignation_reason is null
+		and
+			u.type=3
+	</select>
+	
+	<select id="queryEmployeesNotOnJob" resultMap="EmployeeResult">
+		select 
+			u.u_id,r.real_name
+		from 
+			resumes r,users u 
+		where 
+			r.u_id=u.u_id 
+		and 
+			u.resignation_reason is not null
+		and
+			u.type=3
+	</select>
+	<resultMap type="Employee" id="EmployeeResult">
+		<id property="userId" column="u_id"/>
+		<result property="realName" column="real_name"/>
+	</resultMap>
+</mapper>

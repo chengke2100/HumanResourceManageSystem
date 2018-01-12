@@ -2,87 +2,52 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.iotek.ssm.dao.SalaryDao">
-	<insert id="insertClockingin" parameterType="ClockingIn" >
+	<insert id="insertSalary" parameterType="Salary" >
 		insert into 
-			clockingin(user_id,begin_time, end_time,is_late,is_early,absenteeism_days,year,month,day)
+			salary(user_id,basic_pay, merit_pay,overtime_pay,social_security,rewards_pay,year,month)
 		values
-			(#{user.uid},#{beginTime},#{endTime},#{isLate},#{isEarly},#{absenteeismDays},#{year},#{month},#{day})
+			(#{user.uid},#{basicPay},#{meritPay},#{overtimePay},#{socialSecurity},#{rewardsPay},#{year},#{month})
 	</insert>
 	
-	<update id="updateClockingin" parameterType="ClockingIn">
+	<update id="updateSalary" parameterType="Salary">
 		update 
-			clockingin
+			salary
 		set 
-			begin_time=#{beginTime},end_time=#{endTime},is_late=#{isLate},is_early=#{isEarly},
-			absenteeism_days=#{absenteeismDays},year=#{year},month=#{month},day=#{day}
+			basic_pay=#{basicPay},merit_pay=#{meritPay},overtime_pay=#{overtimePay},social_security=#{socialSecurity},
+			rewards_pay=#{rewardsPay},year=#{year},month=#{month}
 		where
-			clo_id=#{cloId}
+			sal_id=#{salId}
 	</update>
 	
 	
-	<select id="queryClockingInById" resultMap="ClockingInResult">
-		select * from clockingin c,users u where c.user_id=u.u_id and c.clo_id=#{cloId}
+	<select id="querySalaryById" resultMap="SalaryResult">
+		select * from salary s,users u where s.user_id=u.u_id and s.sal_id=#{salId}
 	</select>
 	
-	<select id="queryClockingInByUid" resultMap="ClockingInResult">
+	<select id="querySalaryByUserIdAndMonth" resultMap="SalaryResult">
 		select 
 			* 
 		from 
-			clockingin c,users u 
+			salary s,users u 
 		where 
-			c.user_id=u.u_id 
+			s.user_id=u.u_id 
 		and 
-			c.user_id=#{userId}
+			s.user_id=#{userId}
 		and
 			c.year=#{year}
 		and
 			c.month=#{month}
 	</select>
-	
-	
-	<select id="queryAbsenteeismDays" resultType="Integer">
-		select 
-			min(absenteeism_days)
-		from 
-			clockingin c,users u 
-		where 
-			c.user_id=u.u_id 
-		and 
-			c.user_id=#{userId}
-		and
-			c.year=#{year}
-		and
-			c.month=#{month}
-	</select>
-	
-	
-	<select id="queryClockingInByUidAndTime" resultMap="ClockingInResult">
-		select 
-			* 
-		from 
-			clockingin c,users u 
-		where 
-			c.user_id=u.u_id 
-		and 
-			c.user_id=#{userId}
-		and
-			c.year=#{year}
-		and
-			c.month=#{month}
-		and
-			c.day=#{day}
-	</select>
-	
-	<resultMap type="ClockingIn" id="ClockingInResult">
-		<id property="cloId" column="clo_id"/>
-		<result property="beginTime" column="begin_time"/>
-		<result property="endTime" column="end_time"/>
-		<result property="isLate" column="is_late"/>
-		<result property="isEarly" column="is_early"/>
-		<result property="absenteeismDays" column="absenteeism_days"/>
+		
+	<resultMap type="Salary" id="SalaryResult">
+		<id property="salId" column="sal_id"/>
+		<result property="basicPay" column="basic_pay"/>
+		<result property="meritPay" column="merit_pay"/>
+		<result property="overtimePay" column="overtime_pay"/>
+		<result property="socialSecurity" column="social_security"/>
+		<result property="rewardsPay" column="rewards_pay"/>
 		<result property="year" column="year"/>
 		<result property="month" column="month"/>
-		<result property="day" column="day"/>
 		<association property="user" javaType="User">
 			<id property="uid" column="u_id"/>
 			<result property="userName" column="user_name"/>

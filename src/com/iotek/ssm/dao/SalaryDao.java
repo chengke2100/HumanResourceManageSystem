@@ -1,5 +1,7 @@
 package com.iotek.ssm.dao;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.iotek.ssm.entity.Salary;
 
 public interface SalaryDao {
@@ -28,5 +30,5 @@ public interface SalaryDao {
 	 * @param month
 	 * @return
 	 */
-	Salary querySalary(int useId,int year,int month);
+	Salary querySalaryByUserIdAndMonth(@Param("userId")int userId,@Param("year")int year,@Param("month")int month);
 }

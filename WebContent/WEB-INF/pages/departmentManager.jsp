@@ -25,107 +25,17 @@
 		if(${!empty requestScope.nohire}){
 			alert("拒绝成功");
 		}
-	})
-		/* $("select[name='deptId']").change(function(){
-			var did = $(this).val();
-			$.ajax({
-				url:"${pageContext.request.contextPath }/user/positions",
-				type:"post",
-				data:{did:did},
-				dataType:"json",
-				success:function(data){
-					$("select[name=pid]").empty();
-//					$("select[name=positon]").append("<option>职位</option>");
-					$.each(data,function(idx,item){
-						$("select[name=pid]").append("<option value="+item.pid+">"+item.name+"</option>");
-					})
-				}
-			})
-		})
-		$("input[name='oldPassword']").blur(function(){
-			var oldPassword = $(this).val();
-			alert(oldPassword);
-			$.ajax({
-				url:"${pageContext.request.contextPath }/user/checkPassword",
-				type:"post",
-				data:{oldPassword:oldPassword},
-				dataType:"text",
-				success:function(data){
-					if(data=="success"){
-						$(".span2").html("");
-					}else{
-						$(".span2").html("密码错误");
-					}
-				}
-				
-			})
-		})
-		$("input[name='checkPassword']").blur(function(){
-			var newPassword = $("input[name='newPassword']").val();
-			var checkPassword = $(this).val();
-			if(newPassword!=checkPassword){
-				$(".span1").html("两次输入的密码不一样");
+		$("input[name='basicPay']").blur(function(){
+			var basicPay = $(this).val();
+			var regu = /^[1-9]\d*$/;
+			if(!regu.test(basicPay)){
+				alert("请输入合理的正整数");
+				$("input[name='hire']").attr("disabled",true);
 			}else{
-				$(".span1").html("");
+				$("input[name='hire']").attr("disabled",false);
 			}
 		})
-		$("input[name='update']").click(function(){
-			var newPassword = $("input[name='newPassword']").val();
-			$.ajax({
-				url:"${pageContext.request.contextPath }/user/updatePassword",
-				type:"post",
-				data:{newPassword:newPassword},
-				dataType:"text",
-				success:function(data){
-					if(data=="ok"){
-						alert("修改成功");
-						$(".flag").hide();
-					}
-				}
-			})
-			return false;
-		})
-		$("input[name='apply']").click(function(){
-			var recruitsId = $(this).prev().val();
-			alert(recruitsId);
-			$.ajax({
-				url:"${pageContext.request.contextPath}/recruit/apply",
-				data:{recruitsId:recruitsId},
-				dataType:"text",
-				success:function(data){
-					if(data=="1"){
-						alert("您还没有创建简历，请先去创建简历");
-					}else if(data=="2"){
-						alert("您简历上的应聘职位与招聘上的职位不相同 ，请先修改简历或者改投其它职位");
-					}else if(data=="3"){
-						alert("您还有未完结的应聘，请等待上个应聘完结之后在投递");
-					}else{
-						alert("申请成功,请注意关注企业反馈信息");
-					}
-				}
-			})
-		})
 	})
-	
-	function queryResume(){
-		$(".flag").hide();
-		$("#resume").show();
-		if(${empty requestScope.resume}){
-			$.ajax({
-				url:"${pageContext.request.contextPath}/user/findResume",
-				data:{},
-				type:"post",
-				dataType:"text",
-				success:function(data){
-					if(data=="on"){
-	//					 window.location.reload();
-						 alert(aaa);
-						 $("#resume").show();
-					}
-				}
-			})
-		}*/
-
 
 	function inform(){
 		$(".flag").hide();
@@ -144,8 +54,11 @@
 	
 	function noHire(){
 		var interId = $("input[name='interId']").val();
-		alert(interId);
 		window.location.href = "${pageContext.request.contextPath}/interview/noHire/"+interId;
+	}
+	
+	function hire(){
+		$("#hire").show();		
 	}
 	
 	function quit(){
@@ -237,8 +150,13 @@
 			</table>			
 			<form action="${pageContext.request.contextPath }/interview/hire" method="post">
 				<input type="hidden" value="${requestScope.interId }" name="interId">
-				&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" value="录用">
-				&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" value="不录用" onclick="noHire()">
+				&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" value="录用" onclick="hire()">
+				&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" value="不录用" onclick="noHire()"><br/><br/>
+				<div class="flag" id="hire">
+					请输入此员工的基本薪资:<input type="number" name="basicPay" required="required"><br/><br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type="submit" value="确认" name="hire">
+				</div>
 			</form>
 		</div>
 	</div>

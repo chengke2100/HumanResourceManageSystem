@@ -1,5 +1,6 @@
 package com.iotek.ssm.service.impl;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -8,14 +9,15 @@ import org.springframework.stereotype.Service;
 
 import com.iotek.ssm.dao.ApplyDao;
 import com.iotek.ssm.dao.InterviewDao;
-import com.iotek.ssm.dao.PositionDao;
 import com.iotek.ssm.dao.RecruitDao;
+import com.iotek.ssm.dao.SalaryDao;
 import com.iotek.ssm.dao.UserDao;
 import com.iotek.ssm.entity.Apply;
 import com.iotek.ssm.entity.Department;
 import com.iotek.ssm.entity.Interview;
 import com.iotek.ssm.entity.Position;
 import com.iotek.ssm.entity.Recruit;
+import com.iotek.ssm.entity.Salary;
 import com.iotek.ssm.entity.User;
 import com.iotek.ssm.service.InterviewService;
 @Service("interviewService")
@@ -29,7 +31,7 @@ public class InterviewServiceImpl implements InterviewService {
 	@Autowired
 	private UserDao userDao;
 	@Autowired
-	private PositionDao positionDao;
+	private SalaryDao salaryDao;
 	
 	@Override
 	public int addInterview(Interview interview) {
@@ -66,7 +68,7 @@ public class InterviewServiceImpl implements InterviewService {
 	}
 
 	@Override
-	public User doHire(Integer interId,int uid) {
+	public User doHire(Integer interId,int uid,Integer basicPay) {
 		Interview interview = interviewDao.queryInterviewById(interId);
 		//将面试记录的是否录用改成录用
 		interview.setIsHire("录用");
@@ -86,6 +88,12 @@ public class InterviewServiceImpl implements InterviewService {
 		user.setPosition(position);
 		user.setType(3);
 		userDao.updateUser(user);
+		//生成员工当月的工资记录
+		Calendar cal = Calendar.getInstance();
+		int year = cal.get(Calendar.YEAR);
+		int month = cal.get(Calendar.MONTH)+1;
+		Salary salary = new Salary(-1, user, basicPay, 0, 0, 0, 0, year, month);
+		salaryDao.insertSalary(salary);
 		return user;
 	}
 

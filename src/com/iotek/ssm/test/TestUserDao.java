@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.iotek.ssm.dao.EmployeeDao;
 import com.iotek.ssm.dao.InterviewDao;
 import com.iotek.ssm.dao.UserDao;
+import com.iotek.ssm.entity.Employee;
 import com.iotek.ssm.entity.Interview;
 import com.iotek.ssm.entity.User;
 import com.iotek.ssm.util.MyUtil;
@@ -22,7 +24,8 @@ public class TestUserDao {
 	private UserDao userDao;
 	@Autowired
 	private InterviewDao interviewDao;
-	
+	@Autowired
+	private EmployeeDao employeeDao;
 	@Test
 	public void testinsertUser() {
 		User user = new User("jack", "123456", 0, new Date());
@@ -73,6 +76,12 @@ public class TestUserDao {
 	public void testUtil() {
 		int workdays = MyUtil.getWorkdays(2018, 1);
 		System.out.println(workdays);
+	}
+	
+	@Test
+	public void testEmplyeeDao() {
+		List<Employee> list = employeeDao.queryEmployeesByIsOnJob();
+		System.out.println(list);
 	}
 	
 }

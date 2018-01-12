@@ -33,7 +33,12 @@ public interface InterviewService {
 	 * 录用员工
 	 * @param interId 面试记录id
 	 * @param uid 用户id
+	 * @param basePay 
 	 */
-	User doHire(Integer interId,int uid);
+	User doHire(Integer interId,int uid, Integer basePay);
+	/**
+	 * 不录用员工
+	 * @param interId
+	 */
 	void noHire(Integer interId);
 }
