@@ -5,11 +5,15 @@
 
 	<select id="queryEmployeesByIsOnJob" resultMap="EmployeeResult">
 		select 
-			u.u_id,r.real_name
+			u.u_id,r.real_name,d.d_id,p.p_id,d.dept_name,p.position_name
 		from 
-			resumes r,users u 
+			resumes r,users u ,departments d,positions p
 		where 
 			r.u_id=u.u_id 
+		and
+			u.dept_id=d.d_id
+		and
+			u.position_id=p.p_id
 		and 
 			u.resignation_reason is null
 		and
@@ -18,18 +22,31 @@
 	
 	<select id="queryEmployeesNotOnJob" resultMap="EmployeeResult">
 		select 
-			u.u_id,r.real_name
+			u.u_id,r.real_name,d.d_id,p.p_id,d.dept_name,p.position_name
 		from 
-			resumes r,users u 
+			resumes r,users u ,departments d,positions p
 		where 
 			r.u_id=u.u_id 
+		and
+			u.dept_id=d.d_id
+		and
+			u.position_id=p.p_id
 		and 
 			u.resignation_reason is not null
 		and
 			u.type=3
 	</select>
+	
 	<resultMap type="Employee" id="EmployeeResult">
 		<id property="userId" column="u_id"/>
 		<result property="realName" column="real_name"/>
+		<association property="department" javaType="Department">
+			<id property="did" column="d_id"/>
+			<result property="deptName" column="dept_name"/>
+		</association>
+		<association property="position" javaType="Position">
+			<id property="pid" column="p_id"></id>
+			<result property="name" column="position_name"/>
+		</association>
 	</resultMap>
 </mapper>

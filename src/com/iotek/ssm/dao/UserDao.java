@@ -66,4 +66,5 @@ public interface UserDao {
 	User queryUserByName(String userName);
 	
 	int deleteDepartmentManager(Integer did);
+	
 }

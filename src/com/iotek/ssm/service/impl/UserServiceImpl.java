@@ -54,4 +54,9 @@ public class UserServiceImpl implements UserService {
 		return userDao.deleteDepartmentManager(did);
 	}
 
+	@Override
+	public User getUserByUid(Integer userId) {
+		return userDao.queryUserById(userId);
+	}
+
 }

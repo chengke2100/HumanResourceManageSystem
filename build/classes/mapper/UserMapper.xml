@@ -26,7 +26,6 @@
 		where 
 			u.u_id=#{uid}
 	</select>
-
 	
 	<resultMap type="User" id="UserResult">
 		<id property="uid" column="u_id"/>

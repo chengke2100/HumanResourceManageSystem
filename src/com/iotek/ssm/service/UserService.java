@@ -33,4 +33,6 @@ public interface UserService {
 	 * @return
 	 */
 	int deleteDepartmentManager(Integer did);
+
+	User getUserByUid(Integer userId);
 }

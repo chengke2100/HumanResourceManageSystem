@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="f" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -33,6 +34,15 @@
 		if(${requestScope.employees!=null}){
 			$("#employee").show();
 		}
+		if(${requestScope.user!=null}){
+			$("#transfer").show();
+		}
+		if(${requestScope.dotransfer!=null}){
+			alert("调动成功");
+		}
+		if(${!empty requestScope.clockingList}){
+			$("#clocking").show();
+		}
 		$("select[name='deptId']").change(function(){
 			var did = $(this).val();
 			var $sel = $(this);
@@ -50,9 +60,18 @@
 				}
 			})
 		})
+		
+	
 		$("select[name='isOnJob']").change(function(){
 			var isOnJob = $(this).val();
 			window.location.href="${pageContext.request.contextPath }/employee/showEmployees/"+isOnJob;
+		})
+		
+		$("select[name='year']").change(function(){
+			var realName = ${requestScope.realName};
+			var year = $(this).val();
+			var month = $("select[name='month']").val();
+			window.location.href="${pageContext.request.contextPath}/employee/showClockingIn/"+year+"/"+month+"/"+realName;
 		})
 		
 	})
@@ -268,13 +287,7 @@
 		})
 	}
 	
-	function transfer(userId){
-		url:"${pageContext.request.contextPath}/employee/transfer",
-		type:"post",
-		data:{userId:userId},
-		dataType:"json",
-		//写到此处
-	}
+	
 	function quit(){
 		if(confirm("是否确认退出？")){
 			return true;	
@@ -505,30 +518,99 @@
 			</div>
 		</div>
 		<div class="flag" id="employee">
-			<form action="#" method="post">
-				<select name="isOnJob">
-					<option <c:if test="${requestScope.isOnJob eq '在职员工'}">selected</c:if> >在职员工</option>
-					<option <c:if test="${requestScope.isOnJob eq '离职员工'}">selected</c:if> >离职员工</option>
-				</select>
-				<table border="2" cellpadding="10" cellspacing="0">
+			<select name="isOnJob">
+				<option <c:if test="${requestScope.isOnJob eq '在职员工'}">selected</c:if> >在职员工</option>
+				<option <c:if test="${requestScope.isOnJob eq '离职员工'}">selected</c:if> >离职员工</option>
+			</select>
+			<table border="2" cellpadding="10" cellspacing="0">
+				<tr>
+					<td>编号</td>
+					<td>姓名</td>
+					<td colspan="4" align="center">操作</td>
+				</tr>
+				<c:forEach items="${requestScope.employees }" var="employee">
 					<tr>
-						<td>编号</td>
-						<td>姓名</td>
-						<td colspan="4" align="center">操作</td>
-					</tr>
-					<c:forEach items="${requestScope.employees }" var="employee">
-						<tr>
-							<td>${employee.userId }</td>
-							<td><a href="#">${employee.realName }</a></td>
-							<td><a href="javascript:transfer(${employee.userId })">人事调动</a></td>
-							<td><a href="#">考勤</a></td>
-							<td><a href="#">工资发放</a></td>
-							<td><a href="#">开除</a></td>
-						</tr>
+						<td>${employee.userId }</td>
+						<td><a href="${pageContext.request.contextPath }/employee/message/${employee.userId }">${employee.realName }</a></td>
+						<td><a href="${pageContext.request.contextPath }/employee/transfer/${employee.userId }">人事调动</a></td>
+						<td><a href="${pageContext.request.contextPath }/employee/clocking/${employee.userId }/${employee.realName }">考勤</a></td>
+						<td><a href="#">工资发放</a></td>
+						<td><a href="#">开除</a></td>
+					</tr><br/>
+				</c:forEach>
+			</table>
+		</div>
+		<div class="flag" id="transfer">
+			<form action="${pageContext.request.contextPath }/employee/dotransfer" method="post">
+				<input type="hidden" value="${requestScope.user.uid }" name="uid">
+				<h2>请选择调动的部门职位</h2>
+				<select name="deptId">
+					<c:forEach items="${sessionScope.departments }" var="department">
+						<option value="${department.did }"<c:if test="${department.did==user.department.did }">selected</c:if> >${department.deptName }</option>
 					</c:forEach>
-				</table>
+				</select>
+				<select name="positionId">
+					<c:forEach items="${user.department.positions }" var="position">
+						<option value="${position.pid }" <c:if test="${position.pid==user.position.pid }">selected</c:if> >${position.name }</option>
+					</c:forEach>
+				</select><br/><br/>
+				<input type="submit" value="确认调动">
 			</form>
 		</div>
+		<div class="flag" id="clocking">
+			<form action="#" method="post" >
+				<select name="year">
+					<option <c:if test="${requestScope.year==2016 }">selected</c:if>>2016</option>
+					<option <c:if test="${requestScope.year==2017 }">selected</c:if>>2017</option>
+					<option <c:if test="${requestScope.year==2018 }">selected</c:if>>2018</option>
+				</select>
+				<select name="month">
+					<option <c:if test="${requestScope.month==1 }">selected</c:if>>1</option>
+					<option <c:if test="${requestScope.month==2 }">selected</c:if>>2</option>
+					<option <c:if test="${requestScope.month==3 }">selected</c:if>>3</option>
+					<option <c:if test="${requestScope.month==4 }">selected</c:if>>4</option>
+					<option <c:if test="${requestScope.month==5 }">selected</c:if>>5</option>
+					<option <c:if test="${requestScope.month==6 }">selected</c:if>>6</option>
+					<option <c:if test="${requestScope.month==7 }">selected</c:if>>7</option>
+					<option <c:if test="${requestScope.month==8 }">selected</c:if>>8</option>
+					<option <c:if test="${requestScope.month==9 }">selected</c:if>>9</option>
+					<option <c:if test="${requestScope.month==10 }">selected</c:if>>10</option>
+					<option <c:if test="${requestScope.month==11 }">selected</c:if>>11</option>
+					<option <c:if test="${requestScope.month==12 }">selected</c:if>>12</option>
+				</select>
+				该月目前缺勤天数:${requestScope.absenteeismDays }天
+			</form>
+			<table border="2" cellpadding="10" cellspacing="0">
+				<tr>
+					<td>员工</td>
+					<td>上班时间</td>
+					<td>下班时间</td>
+					<td>是否迟到</td>
+					<td>是否早退</td>
+				</tr>
+				<c:choose>
+					<c:when test="${!empty requestScope.clockingList }">
+						<c:forEach items="${requestScope.clockingList }"  var="clockingIn">
+							<tr>
+								<td>${requestScope.realName }</td>
+								<td><f:formatDate value="${clockingIn.beginTime }" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+								<td><f:formatDate value="${clockingIn.endTime }" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+								<td>${clockingIn.isLate }</td>
+								<td>${clockingIn.isEarly }</td>
+							</tr>
+						</c:forEach>
+					</c:when>
+					<c:otherwise>
+						<tr>
+							<td colspan="5" align="center">暂未考勤</td>
+						</tr>
+					</c:otherwise>
+				</c:choose>
+				<tr>
+					<td colspan="5" align="center"><a href="${pageContext.request.contextPath }/employee/showEmployees/在职员工">返回</a></td>
+				</tr>
+			</table>
+		</div>	
 	</div>
 </body>
 </html>
