@@ -40,8 +40,17 @@
 		if(${requestScope.dotransfer!=null}){
 			alert("调动成功");
 		}
-		if(${!empty requestScope.clockingList}){
+		if(${requestScope.clockingList!=null}){
 			$("#clocking").show();
+		}
+		if(${!empty requestScope.employeeResume}){
+			$("#employeeResume").show();
+		}
+		if(${!empty requestScope.give}){
+			alert("奖赏成功");
+		}
+		if(${requestScope.rewardsList!=null}){
+			$("#reward").show();
 		}
 		$("select[name='deptId']").change(function(){
 			var did = $(this).val();
@@ -68,12 +77,32 @@
 		})
 		
 		$("select[name='year']").change(function(){
-			var realName = ${requestScope.realName};
+			var realName = "${requestScope.realName}";
+			var userId = "${requestScope.userId}";
 			var year = $(this).val();
 			var month = $("select[name='month']").val();
-			window.location.href="${pageContext.request.contextPath}/employee/showClockingIn/"+year+"/"+month+"/"+realName;
+			window.location.href="${pageContext.request.contextPath}/employee/showClockingIn/"+year+"/"+month+"/"+realName+"/"+userId;
 		})
 		
+		$("select[name='month']").change(function(){
+			var realName = "${requestScope.realName}";
+			var userId = "${requestScope.userId}";
+			var month = $(this).val();
+			var year = $("select[name='year']").val();
+			window.location.href="${pageContext.request.contextPath}/employee/showClockingIn/"+year+"/"+month+"/"+realName+"/"+userId;
+		})
+		
+		$("select[name='year1']").change(function(){
+			var year = $(this).val();
+			var month = $("select[name='month1']").val();
+			window.location.href="${pageContext.request.contextPath}/employee/findRewards/"+year+"/"+month;
+		})
+		
+		$("select[name='month1']").change(function(){
+			var month = $(this).val();
+			var year = $("select[name='year1']").val();
+			window.location.href="${pageContext.request.contextPath}/employee/findRewards/"+year+"/"+month;
+		})
 	})
 	
 	function postJob(){
@@ -287,7 +316,12 @@
 		})
 	}
 	
-	
+	function showGive(){
+		$("#give").show();
+	}
+	function after(){
+		$("#give").hide();
+	}
 	function quit(){
 		if(confirm("是否确认退出？")){
 			return true;	
@@ -308,7 +342,7 @@
 			<li><a href="#" onclick="showDepartment()">部门职位</a></li>
 			<li><a href="#">培训管理</a></li>
 			<li><a href="${pageContext.request.contextPath }/employee/showEmployees/在职员工">员工管理</a></li>
-			<li><a href="#">奖罚管理</a></li>
+			<li><a href="${pageContext.request.contextPath }/employee/findRewards/0/0">查看奖罚</a></li>
 			<li><a href="#">薪资管理</a></li>
 			<li><a href="#">工资异议</a></li>
 			<li><a href="${pageContext.request.contextPath }/user/loginPage" onclick="return quit()">退出</a></li>
@@ -609,6 +643,117 @@
 				<tr>
 					<td colspan="5" align="center"><a href="${pageContext.request.contextPath }/employee/showEmployees/在职员工">返回</a></td>
 				</tr>
+			</table>
+		</div>
+		<div class="flag" id="employeeResume" align="center">
+			<table border="2" cellpadding="10" cellspacing="0">
+				<tr>
+					<td colspan="4" align="center">员工信息</td>
+				</tr>
+				<tr>
+					<td>姓名</td>
+					<td>${requestScope.employeeResume.realName }</td>
+					<td>性别</td>
+					<td>${requestScope.employeeResume.sex}</td>
+				</tr>
+				<tr>
+					<td>年龄</td>
+					<td>${requestScope.employeeResume.age }</td>
+					<td>学历</td>
+					<td>${requestScope.employeeResume.education }</td>
+				</tr>
+				<tr>
+					<td>联系方式</td>
+					<td>${requestScope.employeeResume.phoneNumber }</td>
+					<td>邮箱</td>
+					<td>${requestScope.employeeResume.email }</td>
+				</tr>
+				<tr>
+					<td>入职时间</td>
+					<td><f:formatDate value="${requestScope.entryDate }" pattern="yyy-MM-dd"/> </td>
+					<td>职位</td>
+					<td>
+						${requestScope.employeeResume.position.department.deptName }&nbsp;&nbsp;&nbsp;
+						${requestScope.employeeResume.position.name }
+					</td>
+				</tr>
+			</table><br/>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<input type="button" value="赏" onclick="showGive()">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<input type="button" value="取消" onclick="after()">
+			<div class="flag" id="give" align="center">
+				<h2>赏</h2>
+				<form action="${pageContext.request.contextPath }/employee/give " method="post">
+					<input type="hidden" value="${requestScope.employeeResume.uid }" name="userId">
+					<input type="hidden" value="${requestScope.employeeResume.realName }" name="realName">
+					<table>
+						<tr>
+							<td>奖赏理由:</td>
+							<td><input type="text" name="season"></td>
+						</tr>
+						<tr>
+							<td>奖金:</td>
+							<td>
+								<select name="bonus">
+									<option value="200">200</option>
+									<option value="400">400</option>
+									<option value="600">600</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>时间：</td>
+							<td><input type="date" name="rewardsTime1"></td>
+						</tr>
+						<tr>
+							<td colspan="2" align="center"><input type="submit" value="确定"></td>
+						</tr>
+					</table>		
+				</form>
+			</div>
+		</div>
+		<div class="flag" id="reward" align="center">
+			<form action="#" method="post" >
+				<select name="year2">
+					<option <c:if test="${requestScope.year==2016 }">selected</c:if>>2016</option>
+					<option <c:if test="${requestScope.year==2017 }">selected</c:if>>2017</option>
+					<option <c:if test="${requestScope.year==2018 }">selected</c:if>>2018</option>
+				</select>
+				<select name="month2">
+					<option <c:if test="${requestScope.month==1 }">selected</c:if>>1</option>
+					<option <c:if test="${requestScope.month==2 }">selected</c:if>>2</option>
+					<option <c:if test="${requestScope.month==3 }">selected</c:if>>3</option>
+					<option <c:if test="${requestScope.month==4 }">selected</c:if>>4</option>
+					<option <c:if test="${requestScope.month==5 }">selected</c:if>>5</option>
+					<option <c:if test="${requestScope.month==6 }">selected</c:if>>6</option>
+					<option <c:if test="${requestScope.month==7 }">selected</c:if>>7</option>
+					<option <c:if test="${requestScope.month==8 }">selected</c:if>>8</option>
+					<option <c:if test="${requestScope.month==9 }">selected</c:if>>9</option>
+					<option <c:if test="${requestScope.month==10 }">selected</c:if>>10</option>
+					<option <c:if test="${requestScope.month==11 }">selected</c:if>>11</option>
+					<option <c:if test="${requestScope.month==12 }">selected</c:if>>12</option>
+				</select>
+			</form>
+			<table border="2" cellpadding="10" cellspacing="0">
+				<tr>
+					<td>编号</td>
+					<td>奖惩人员</td>
+					<td>奖惩缘由</td>
+					<td>奖惩时间</td>
+					<td>奖金金额</td>
+					<td>奖惩类型</td>
+				</tr>
+				<c:forEach items="${requestScope.rewardsList }" var="rewards">
+					<tr>
+						<td>${rewards.rewardsId }</td>
+						<td>${rewards.realName }</td>
+						<td>${rewards.season }</td>
+						<td><f:formatDate value="${rewards.rewardsTime }" pattern="yyyy-MM-dd"/></td>
+						<td>${rewards.bonus }</td>
+						<td>${rewards.type }</td>
+					</tr>
+				</c:forEach>
 			</table>
 		</div>	
 	</div>

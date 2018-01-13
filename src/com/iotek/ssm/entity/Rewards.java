@@ -5,6 +5,7 @@ import java.util.Date;
 public class Rewards {
 	private int rewardsId;
 	private User user;
+	private String realName;
 	private String season;
 	private Date rewardsTime;
 	private int bonus;
@@ -14,11 +15,13 @@ public class Rewards {
 	public Rewards() {
 		super();
 	}
-	public Rewards(int rewardsId, User user, String season, Date rewardsTime, int bonus, String type, int year,
-			int month) {
+	
+	public Rewards(int rewardsId, User user, String realName, String season, Date rewardsTime, int bonus, String type,
+			int year, int month) {
 		super();
 		this.rewardsId = rewardsId;
 		this.user = user;
+		this.realName = realName;
 		this.season = season;
 		this.rewardsTime = rewardsTime;
 		this.bonus = bonus;
@@ -26,6 +29,7 @@ public class Rewards {
 		this.year = year;
 		this.month = month;
 	}
+
 	public int getRewardsId() {
 		return rewardsId;
 	}
@@ -74,10 +78,20 @@ public class Rewards {
 	public void setMonth(int month) {
 		this.month = month;
 	}
+	
+	public String getRealName() {
+		return realName;
+	}
+
+	public void setRealName(String realName) {
+		this.realName = realName;
+	}
+
 	@Override
 	public String toString() {
-		return "Rewards [rewardsId=" + rewardsId + ", user=" + user + ", season=" + season + ", rewardsTime="
-				+ rewardsTime + ", bonus=" + bonus + ", type=" + type + ", year=" + year + ", month=" + month + "]";
+		return "Rewards [rewardsId=" + rewardsId + ", user=" + user + ", realName=" + realName + ", season=" + season
+				+ ", rewardsTime=" + rewardsTime + ", bonus=" + bonus + ", type=" + type + ", year=" + year + ", month="
+				+ month + "]";
 	}
 	
 	

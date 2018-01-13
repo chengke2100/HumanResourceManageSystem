@@ -23,4 +23,6 @@ public interface RewardsDao {
 	 * @return
 	 */
 	List<Rewards> queryRewardsByUidAndMonth(@Param("userId")int userId,@Param("year")int year,@Param("month")int month);
+
+	List<Rewards> findRewardsByMonth(@Param("year")int year,@Param("month")int month);
 }

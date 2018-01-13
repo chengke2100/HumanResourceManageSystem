@@ -4,9 +4,9 @@
 <mapper namespace="com.iotek.ssm.dao.RewardsDao">
 	<insert id="insertRewards" parameterType="Rewards" >
 		insert into 
-			rewards(user_id,season,rewards_time,bonus,type,year,month)
+			rewards(user_id,real_name,season,rewards_time,bonus,type,year,month)
 		values
-			(#{userId},#{season},#{rewardsTime},#{bonus},#{type},#{year},#{month})
+			(#{userId},#{realName},#{season},#{rewardsTime},#{bonus},#{type},#{year},#{month})
 	</insert>
 	
 	
@@ -31,8 +31,22 @@
 			r.month=#{month}
 	</select>
 	
+	<select id="findRewardsByMonth" resultMap="RewardsResult">
+		select 
+			* 
+		from 
+			rewards r,users u 
+		where 
+			r.user_id=u.u_id 
+		and
+			r.year=#{year}
+		and
+			r.month=#{month}
+	</select>
+	
 	<resultMap type="Rewards" id="RewardsResult">
 		<id property="rewardsId" column="rewards_id"/>
+		<result property="realName" column="real_name"/>
 		<result property="season" column="season"/>
 		<result property="rewardsTime" column="rewards_time"/>
 		<result property="bonus" column="bonus"/>

@@ -10,4 +10,6 @@ public interface RewardsService {
 	Rewards getRewardsById(int rewardsId);
 	
 	List<Rewards> findRewardsByUidAndMonth(int userId,int year,int month);
+
+	List<Rewards> findRewardsByMonth(int year, int month);
 }

@@ -28,4 +28,9 @@ public class RewardsServiceImpl implements RewardsService {
 		return rewardsDao.queryRewardsByUidAndMonth(userId, year, month);
 	}
 
+	@Override
+	public List<Rewards> findRewardsByMonth(int year, int month) {
+		return rewardsDao.findRewardsByMonth(year,month);
+	}
+
 }
