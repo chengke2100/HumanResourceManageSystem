@@ -52,6 +52,9 @@
 		if(${requestScope.rewardsList!=null}){
 			$("#reward").show();
 		}
+		if(${requestScope.trains!=null}){
+			$("#trains").show();
+		}
 		$("select[name='deptId']").change(function(){
 			var did = $(this).val();
 			var $sel = $(this);
@@ -212,30 +215,9 @@
 		})
 	}
 	
-	function updatePosition(pid){
-		var pName = prompt("请输入您要修改的职位名");
-		if(pName==null){
-			return;
-		}
-		var $td = $("."+pid);
-		$.ajax({
-			url:"${pageContext.request.contextPath}/department/updatePosition",
-			type:"post",
-			data:{pid:pid,pName:pName},
-			dataType:"json",
-			success:function(data){
-				if(data==null){
-					alert("名字为"+pName+"的职位已经存在,请查证后在修改");
-				}else{
-					alert("修改成功");
-					$td.empty();
-					$td.append("<a>"+data.name+"</a>")
-				}
-			},
-			error:function(x,msg,obj){
-				alert(msg);
-			}
-		})
+	function addTrain(){
+		$("#updateTrain").hide();
+		$("#addTrain").show();
 	}
 	
 	function deletePosition(pid){
@@ -322,6 +304,29 @@
 	function after(){
 		$("#give").hide();
 	}
+	function updateTrain(tid){
+		$.ajax({
+			url:"${pageContext.request.contextPath}/train/updateTrain",
+			type:"post",
+			data:{tid:tid},
+			dataType:"json",
+			success:function(data){
+				if(data==null){
+					alert("名字为"+deptName+"的部门已经存在,添加失败")
+				}else{
+					alert("添加成功");
+					$("#departments").append("<tr>"+
+							"<td id="+data.did+"><a href='#' onclick='showPositions("+data.did+")'>"+deptName+"</a></td>"+
+							"<td><a href='javascript:updateDepartment("+data.did+")'>修改</a></td>"+
+							"<td><a href='javascript:deleteDepartment("+data.did+")'>删除</a></td>"+
+							"</tr>");
+				}
+			},
+			error:function(x,msg,obj){
+				alert(msg);
+			}
+		})
+	}
 	function quit(){
 		if(confirm("是否确认退出？")){
 			return true;	
@@ -340,7 +345,7 @@
 			<li><a href="${pageContext.request.contextPath }/recruit/showAll" onclick="showJobs()">管理招聘信息</a></li>
 			<li><a href="${pageContext.request.contextPath }/recruit/showApplys">应聘管理</a></li>
 			<li><a href="#" onclick="showDepartment()">部门职位</a></li>
-			<li><a href="#">培训管理</a></li>
+			<li><a href="${pageContext.request.contextPath }/train/showAll">培训管理</a></li>
 			<li><a href="${pageContext.request.contextPath }/employee/showEmployees/在职员工">员工管理</a></li>
 			<li><a href="${pageContext.request.contextPath }/employee/findRewards/0/0">查看奖罚</a></li>
 			<li><a href="#">薪资管理</a></li>
@@ -755,6 +760,49 @@
 					</tr>
 				</c:forEach>
 			</table>
+		</div>
+		<div class="flag" id="trains" align="center" style="position: relative;">
+			<div style="position: absolute;">
+				<h2>培训</h2>
+				<c:forEach items="${requestScope.trains }" var="train">
+					<a href="javascript:updateTrain(${train.tid })">${train.trainName }</a><p/>
+				</c:forEach>
+				<a href="javascript:addTrain()">添加培训</a>
+			</div>
+			<div style="position: absolute;right:500px" class="flag" id="updateTrain" align="center">
+				
+			</div>
+			<div style="position: absolute;right:500px" class="flag" id="addTrain" align="center">
+				<h2>培训--新增</h2>
+				<form action="${pageContext.request.contextPath }/train/addTrain" method="post">
+					<table>
+						<tr>
+							<td>培训名称:</td>
+							<td><input type="text" name="trainName"></td>
+						</tr>
+						<tr>
+							<td>培训时间:</td>
+							<td><input type="date" name="trainTime"></td>
+						</tr>
+						<tr>
+							<td>培训部门:</td>
+							<td>
+								<select name="departmentId">
+									<c:forEach items="${sessionScope.departments }" var="department">
+										<option value="${department.did }">${department.deptName }</option>
+									</c:forEach>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" align="center">
+								<input type="submit" value="确认">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<input type="button" value="取消" onclick="">
+							</td>
+						</tr>
+					</table>
+				</form>
+			</div>
 		</div>	
 	</div>
 </body>

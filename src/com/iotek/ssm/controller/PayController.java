@@ -13,8 +13,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.iotek.ssm.entity.ClockingIn;
+import com.iotek.ssm.entity.Resume;
+import com.iotek.ssm.entity.Rewards;
 import com.iotek.ssm.entity.User;
 import com.iotek.ssm.service.ClockingInService;
+import com.iotek.ssm.service.ResumeService;
+import com.iotek.ssm.service.RewardsService;
+import com.iotek.ssm.service.SalaryService;
 import com.iotek.ssm.util.MyUtil;
 
 @RequestMapping("pay")
@@ -22,6 +27,12 @@ import com.iotek.ssm.util.MyUtil;
 public class PayController {
 	@Autowired
 	private ClockingInService clockingInService;
+	@Autowired
+	private SalaryService salayService;
+	@Autowired
+	private RewardsService rewardsService;
+	@Autowired
+	private ResumeService resumeService;
 	
 	@RequestMapping("clockin")
 	public String clockin(HttpSession session,Model model) {
@@ -91,9 +102,26 @@ public class PayController {
         clo.setEndTime(endTime);
         clo.setIsEarly(isEarly);
         clockingInService.updateClockingin(clo);
+        Resume resume = resumeService.getResumeByUid(user.getUid());
         if(absenceHours>3) {
         	//算旷工一天，要扣除当天工资
-        	System.out.println(absenceHours);
+        	int basicPay = salayService.getBasicPayByUid(user.getUid());//查出该员工的基本工资
+        	int workdays = MyUtil.getWorkdays(year, month);//获得当月的工作日
+        	int bonus = basicPay/workdays;//应该扣除的当天工资        	
+        	//生成对应的处罚记录
+        	Rewards rewards = new Rewards(-1, user, resume.getRealName(), "旷工一天", new Date(), -bonus, "罚", year, month);
+        	rewardsService.addRewards(rewards);
+        }else {
+        	if(clo.getIsLate().equals("迟到")) {
+        		//迟到但是迟到早退的时间没有超过3小时
+        		Rewards rewards = new Rewards(-1, user, resume.getRealName(), "迟到", new Date(), -50, "罚", year, month);
+        		rewardsService.addRewards(rewards);
+        	}
+        	if(isEarly.equals("早退")) {
+        		//早退但是迟到早退的时间没有超过3小时
+        		Rewards rewards = new Rewards(-1, user, resume.getRealName(), "早退", new Date(), -50, "罚", year, month);
+        		rewardsService.addRewards(rewards);
+        	}
         }
         model.addAttribute("clockout", "clockout");
         return "employee";

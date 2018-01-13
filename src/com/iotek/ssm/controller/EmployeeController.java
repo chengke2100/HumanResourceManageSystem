@@ -6,6 +6,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -72,9 +74,14 @@ public class EmployeeController {
 		User user = userService.getUserByUid(uid);
 		Department department = departmentService.getDepartmentById(deptId);
 		Position position = positionService.getPositionById(positionId);
+		//更改员工的部门和职位
 		user.setDepartment(department);
 		user.setPosition(position);
 		userService.updateUser(user);
+		//更改员工简历上的职位信息
+		Resume resume = resumeService.getResumeByUid(uid);
+		resume.setPosition(position);
+		resumeService.updateResume(resume);
 		model.addAttribute("dotransfer", "dotransfer");
 		return "manager";
 	}
@@ -142,5 +149,25 @@ public class EmployeeController {
 		return "manager";
 	}
 	
+	@RequestMapping("myRewards/{year}/{month}")
+	public String myRewards(@PathVariable("year")Integer year,@PathVariable("month")Integer month,HttpSession session,Model model) {
+		User user = (User) session.getAttribute("user");
+		if(year==0||month==0) {
+			Calendar calendar = Calendar.getInstance();
+			year = calendar.get(Calendar.YEAR);
+			month = calendar.get(Calendar.MONTH)+1;
+		}
+		List<Rewards> rewardsList = rewardsService.findRewardsByUidAndMonth(user.getUid(), year, month);
+		model.addAttribute("rewardsList", rewardsList);
+		model.addAttribute("year", year);
+		model.addAttribute("month", month);
+		return "employee";
+	}
 	
+	@RequestMapping("department")
+	public String showDepartment(Model model) {
+		List<Department> departments = departmentService.findAllDepartments();
+		model.addAttribute("departments", departments);
+		return "employee";
+	}
 }

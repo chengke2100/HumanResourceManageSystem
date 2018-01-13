@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iotek.ssm.dao.TrainDao">
+	<insert id="insertTrain" parameterType="Train">
+		insert into 
+			train(train_name,train_time,dept_id)
+		values
+			(#{trainName},#{trainTime},#{department.did})
+	</insert>
+
+	<update id="updateTrain" parameterType="Train">
+		update 
+			train
+		set
+			train_name=#{trainName},train_time=#{trainTime},dept_id=#{department.did}
+		where
+			t_id=#{tid}
+	</update>
+	
+	<select id="queryTrainById" resultMap="TrainResult">
+		select 
+			*
+		from
+			train t,departments d
+		where 
+			t.dept_id=d.d_id
+		and
+			t.t_id=#{tid} 
+	</select>
+	
+	<select id="queryTrainByDeptId" resultMap="TrainResult">
+		select 
+			*
+		from
+			train t,departments d
+		where 
+			t.dept_id=d.d_id
+		and
+			t.dept_id=#{did} 
+	</select>
+	
+	<select id="queryAllTrains" resultMap="TrainResult">
+		select 
+			*
+		from
+			train t,departments d
+		where 
+			t.dept_id=d.d_id
+	</select>
+	
+	<resultMap type="Train" id="TrainResult">
+		<id property="tid" column="t_id"/>
+		<result property="trainName" column="train_name"/>
+		<association property="department" javaType="Department">
+			<id property="did" column="d_id"/>
+			<result property="deptName" column="dept_name"/>
+		</association>
+	</resultMap>
+</mapper>

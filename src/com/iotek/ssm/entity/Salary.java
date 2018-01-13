@@ -10,11 +10,13 @@ public class Salary {
 	private int rewardsPay;//½±³Í
 	private int year;
 	private int month;
+	private Boolean isGrant;//ÊÇ·ñ·¢·Å
 	public Salary() {
 		super();
 	}
+
 	public Salary(int salId, User user, int basicPay, int meritPay, int overtimePay, int socialSecurity, int rewardsPay,
-			int year, int month) {
+			int year, int month, Boolean isGrant) {
 		super();
 		this.salId = salId;
 		this.user = user;
@@ -25,7 +27,9 @@ public class Salary {
 		this.rewardsPay = rewardsPay;
 		this.year = year;
 		this.month = month;
+		this.isGrant = isGrant;
 	}
+
 	public int getSalId() {
 		return salId;
 	}
@@ -80,12 +84,21 @@ public class Salary {
 	public void setMonth(int month) {
 		this.month = month;
 	}
+	
+	public Boolean getIsGrant() {
+		return isGrant;
+	}
+
+	public void setIsGrant(Boolean isGrant) {
+		this.isGrant = isGrant;
+	}
+
 	@Override
 	public String toString() {
 		return "Salary [salId=" + salId + ", user=" + user + ", basicPay=" + basicPay + ", meritPay=" + meritPay
 				+ ", overtimePay=" + overtimePay + ", socialSecurity=" + socialSecurity + ", rewardsPay=" + rewardsPay
-				+ ", year=" + year + ", month=" + month + "]";
+				+ ", year=" + year + ", month=" + month + ", isGrant=" + isGrant + "]";
 	}
-	
+
 	
 }

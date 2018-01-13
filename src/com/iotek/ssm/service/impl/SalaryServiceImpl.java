@@ -31,4 +31,9 @@ public class SalaryServiceImpl implements SalaryService {
 		return salaryDao.querySalaryByUserIdAndMonth(userId, year, month);
 	}
 
+	@Override
+	public int getBasicPayByUid(int uid) {
+		return salaryDao.queryBasicPayByUid(uid);
+	}
+
 }

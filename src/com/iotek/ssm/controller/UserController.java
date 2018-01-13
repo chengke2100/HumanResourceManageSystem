@@ -151,7 +151,6 @@ public class UserController {
 	public String checkPassword(String oldPassword,HttpSession session) {
 		String password = MyUtil.md5(oldPassword);
 		User user = (User) session.getAttribute("user");
-		System.out.println(user.getPassword().equals(password));
 		if(user.getPassword().equals(password)) {
 			return "success";
 		}

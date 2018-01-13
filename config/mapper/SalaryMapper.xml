@@ -4,9 +4,9 @@
 <mapper namespace="com.iotek.ssm.dao.SalaryDao">
 	<insert id="insertSalary" parameterType="Salary" >
 		insert into 
-			salary(user_id,basic_pay, merit_pay,overtime_pay,social_security,rewards_pay,year,month)
+			salary(user_id,basic_pay, merit_pay,overtime_pay,social_security,rewards_pay,year,month,is_grant)
 		values
-			(#{user.uid},#{basicPay},#{meritPay},#{overtimePay},#{socialSecurity},#{rewardsPay},#{year},#{month})
+			(#{user.uid},#{basicPay},#{meritPay},#{overtimePay},#{socialSecurity},#{rewardsPay},#{year},#{month},#{isGrant})
 	</insert>
 	
 	<update id="updateSalary" parameterType="Salary">
@@ -14,7 +14,7 @@
 			salary
 		set 
 			basic_pay=#{basicPay},merit_pay=#{meritPay},overtime_pay=#{overtimePay},social_security=#{socialSecurity},
-			rewards_pay=#{rewardsPay},year=#{year},month=#{month}
+			rewards_pay=#{rewardsPay},year=#{year},month=#{month},is_grant=#{isGrant}
 		where
 			sal_id=#{salId}
 	</update>
@@ -34,10 +34,22 @@
 		and 
 			s.user_id=#{userId}
 		and
-			c.year=#{year}
+			s.year=#{year}
 		and
-			c.month=#{month}
+			s.month=#{month}
 	</select>
+	
+	<select id="queryBasicPayByUid" parameterType="Integer" >
+		select 
+			max(basic_pay) 
+		from 
+			salary s,users u 
+		where 
+			s.user_id=u.u_id 
+		and 
+			s.user_id=#{userId}
+	</select>
+	
 		
 	<resultMap type="Salary" id="SalaryResult">
 		<id property="salId" column="sal_id"/>
@@ -48,6 +60,7 @@
 		<result property="rewardsPay" column="rewards_pay"/>
 		<result property="year" column="year"/>
 		<result property="month" column="month"/>
+		<result property="isGrant" column="is_grant"/>
 		<association property="user" javaType="User">
 			<id property="uid" column="u_id"/>
 			<result property="userName" column="user_name"/>

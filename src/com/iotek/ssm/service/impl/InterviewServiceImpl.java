@@ -92,7 +92,7 @@ public class InterviewServiceImpl implements InterviewService {
 		Calendar cal = Calendar.getInstance();
 		int year = cal.get(Calendar.YEAR);
 		int month = cal.get(Calendar.MONTH)+1;
-		Salary salary = new Salary(-1, user, basicPay, 0, 0, 0, 0, year, month);
+		Salary salary = new Salary(-1, user, basicPay, 0, 0, 0, 0, year, month,false);
 		salaryDao.insertSalary(salary);
 		return user;
 	}

@@ -31,4 +31,10 @@ public interface SalaryDao {
 	 * @return
 	 */
 	Salary querySalaryByUserIdAndMonth(@Param("userId")int userId,@Param("year")int year,@Param("month")int month);
+	/**
+	 * 查询某个员工的基本工资
+	 * @param userId
+	 * @return
+	 */
+	int queryBasicPayByUid(int userId);
 }

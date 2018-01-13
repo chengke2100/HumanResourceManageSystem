@@ -38,6 +38,14 @@
 		if(${!empty requestScope.message}){
 			alert("您还没有上班打卡，不能直接打下班卡，打卡失败");
 		}
+		if(${requestScope.rewardsList!=null}){
+			$(".flag").hide();
+			$("#myReward").show();
+		}
+		if(${requestScope.departments!=null}){
+			$(".flag").hide();
+			$("#department").show();
+		}
 		$("input[name='oldPassword']").blur(function(){
 			var oldPassword = $(this).val();
 			alert(oldPassword);
@@ -91,12 +99,42 @@
 			var year = $("select[name='year']").val();
 			window.location.href="${pageContext.request.contextPath}/pay/showClockingIn/"+year+"/"+month;
 		})
+		$("select[name='year1']").change(function(){
+			var year = $(this).val();
+			var month = $("select[name='month1']").val();
+			window.location.href="${pageContext.request.contextPath}/employee/myRewards/"+year+"/"+month;
+		})
+		$("select[name='month1']").change(function(){
+			var month = $(this).val();
+			var year = $("select[name='year1']").val();
+			window.location.href="${pageContext.request.contextPath}/employee/myRewards/"+year+"/"+month;
+		})
 	})
 	
 	
 	function updatePassword(){
 		$(".flag").hide();
 		$("#update").show();
+	}
+	
+	function showPositions(did){
+		$.ajax({
+			url:"${pageContext.request.contextPath}/user/positions",
+			data:{did:did},
+			type:"post",
+			dataType:"json",
+			success:function(data){
+				$("#positions").empty();
+				$("#positions").append("<h2>职位</h2>");
+				if(data!=null){							
+					$.each(data,function(idx,item){
+						$("#positions").append("<p>"+item.name+"</p>");
+					})
+				}else{
+					$("#positions").append("<h4>该部门下暂时没有职位</h4>");
+				}	
+			}
+		})
 	}
 	
 	function quit(){
@@ -115,8 +153,8 @@
 			<li><a href="${pageContext.request.contextPath }/resume/showInformation">个人信息</a></li>
 			<li><a href="${pageContext.request.contextPath }/pay/showClockingIn/0/0" >我的考勤</a></li>
 			<li><a href="#" onclick="updatePassword()">修改密码</a></li>
-			<li><a href="#">我的奖惩</a></li>
-			<li><a href="#">部门职位</a></li>
+			<li><a href="${pageContext.request.contextPath }/employee/myRewards/0/0">我的奖惩</a></li>
+			<li><a href="${pageContext.request.contextPath }/employee/department">部门职位</a></li>
 			<li><a href="#">我的薪资</a></li>
 			<li><a href="${pageContext.request.contextPath }/user/loginPage" onclick="return quit()">退出</a></li>
 		</ul>
@@ -235,6 +273,66 @@
 					</c:otherwise>
 				</c:choose>
 			</table>
+		</div>
+		<div class="flag" id="myReward" align="center">
+			<form action="#" method="post" >
+				<select name="year1">
+					<option <c:if test="${requestScope.year==2016 }">selected</c:if>>2016</option>
+					<option <c:if test="${requestScope.year==2017 }">selected</c:if>>2017</option>
+					<option <c:if test="${requestScope.year==2018 }">selected</c:if>>2018</option>
+				</select>
+				<select name="month1">
+					<option <c:if test="${requestScope.month==1 }">selected</c:if>>1</option>
+					<option <c:if test="${requestScope.month==2 }">selected</c:if>>2</option>
+					<option <c:if test="${requestScope.month==3 }">selected</c:if>>3</option>
+					<option <c:if test="${requestScope.month==4 }">selected</c:if>>4</option>
+					<option <c:if test="${requestScope.month==5 }">selected</c:if>>5</option>
+					<option <c:if test="${requestScope.month==6 }">selected</c:if>>6</option>
+					<option <c:if test="${requestScope.month==7 }">selected</c:if>>7</option>
+					<option <c:if test="${requestScope.month==8 }">selected</c:if>>8</option>
+					<option <c:if test="${requestScope.month==9 }">selected</c:if>>9</option>
+					<option <c:if test="${requestScope.month==10 }">selected</c:if>>10</option>
+					<option <c:if test="${requestScope.month==11 }">selected</c:if>>11</option>
+					<option <c:if test="${requestScope.month==12 }">selected</c:if>>12</option>
+				</select>
+			</form>
+			<table border="2" cellpadding="10" cellspacing="0">
+				<tr>
+					<td>编号</td>
+					<td>奖惩缘由</td>
+					<td>奖惩时间</td>
+					<td>奖金金额</td>
+					<td>奖惩类型</td>
+				</tr>
+				<c:choose>
+					<c:when test="${!empty requestScope.rewardsList }">
+						<c:forEach items="${requestScope.rewardsList }" var="rewards">
+							<tr>
+								<td>${rewards.rewardsId }</td>
+								<td>${rewards.season }</td>
+								<td><f:formatDate value="${rewards.rewardsTime }" pattern="yyyy-MM-dd"/> </td>
+								<td>${rewards.bonus }</td>
+								<td>${rewards.type }</td>
+							</tr>
+						</c:forEach>
+					</c:when>
+					<c:otherwise>
+						<tr>
+							<td colspan="5" align="center">该月暂时没有奖罚记录</td>
+						</tr>
+					</c:otherwise>
+				</c:choose>
+			</table>
+		</div>
+		<div class="flag" id="department" style="position: relative;">
+			<div style="position: absolute;" >
+				<h2>部门</h2>
+				<c:forEach items="${requestScope.departments }" var="department">
+					<a href="javascript:showPositions(${department.did })">${department.deptName }</a><p/>
+				</c:forEach>
+			</div>
+			<div style="position: absolute;right:500px" id="positions">
+			</div>
 		</div>
 	</div>
 </body>

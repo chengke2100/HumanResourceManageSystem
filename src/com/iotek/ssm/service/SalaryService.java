@@ -11,4 +11,6 @@ public interface SalaryService {
 	Salary getSalaryById(int salId);
 	
 	Salary getSalaryByUserIdAndMonth(int userId,int year,int month);
+
+	int getBasicPayByUid(int uid);
 }
